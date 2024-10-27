@@ -13,11 +13,11 @@ function App() {
         <Route path="/store" element={<Store />} />
       </Routes>
 
-      <div className="p-5 min-h-screen">
+      {/* <div className="p-5 min-h-screen">
         <h1 className="text-black p-5 bg-accent rounded-2xl text-center font-bold font-mono">
           Fruits Lelo.
         </h1>
-      </div>
+      </div> */}
     </div>
   );
 }
