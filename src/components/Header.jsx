@@ -1,20 +1,41 @@
 import Icon from "@mdi/react";
 import { mdiMagnify, mdiWindowClose, mdiHeart, mdiCart } from "@mdi/js";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function Header() {
   const searchRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
 
   return (
     <header className="py-6 px-10 flex justify-between">
       <div className="flex gap-6 items-center select-none">
-        <h1 className="font-bold text-3xl text-accent cursor-pointer  ">
+        <h1
+          className="font-bold text-3xl text-accent cursor-pointer  "
+          onClick={() => {
+            navigate("/");
+          }}
+        >
           Fruits Lelo.
         </h1>
         <nav className="flex gap-3">
-          <p className="cursor-pointer">Home</p>
-          <p className="cursor-pointer">Store</p>
+          <p
+            className="cursor-pointer"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            Home
+          </p>
+          <p
+            className="cursor-pointer"
+            onClick={() => {
+              navigate("/store");
+            }}
+          >
+            Store
+          </p>
         </nav>
       </div>
       <div className="flex gap-11 items-center">
