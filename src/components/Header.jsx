@@ -9,10 +9,10 @@ export default function Header() {
   const navigate = useNavigate();
 
   return (
-    <header className="py-6 px-10 flex justify-between">
-      <div className="flex gap-6 items-center select-none">
+    <header className="flex justify-between px-10 py-6">
+      <div className="flex items-center gap-6 select-none">
         <h1
-          className="font-bold text-3xl text-accent cursor-pointer  "
+          className="text-3xl font-bold cursor-pointer text-accent "
           onClick={() => {
             navigate("/");
           }}
@@ -38,10 +38,10 @@ export default function Header() {
           </p>
         </nav>
       </div>
-      <div className="flex gap-11 items-center">
+      <div className="flex items-center gap-11">
         <form
           action=""
-          className="bg-secondary flex items-center p-3 rounded-3xl select-none"
+          className="flex items-center p-3 select-none bg-secondary rounded-3xl"
           onClick={() => {
             searchRef.current.focus();
           }}
@@ -49,7 +49,7 @@ export default function Header() {
           <Icon path={mdiMagnify} size={1} color="#ae9b84" />
           <input
             type="text"
-            className="bg-secondary px-3 outline-none border-none caret-accent placeholder:text-white"
+            className="px-3 border-none outline-none bg-secondary caret-accent placeholder:text-white"
             ref={searchRef}
             placeholder="Search"
             onChange={(e) => {
@@ -59,7 +59,7 @@ export default function Header() {
           <Icon
             path={mdiWindowClose}
             size={0.9}
-            className="cursor-pointer hover:scale-125 transition-all"
+            className="transition-all cursor-pointer hover:scale-125"
             onClick={() => {
               searchRef.current.value = "";
               setSearchValue("");
@@ -71,13 +71,13 @@ export default function Header() {
             path={mdiHeart}
             size={1}
             color="#ae9b84"
-            className="cursor-pointer hover:scale-125 transition-all"
+            className="transition-all cursor-pointer hover:scale-125"
           />
           <Icon
             path={mdiCart}
             size={1}
             color="#ae9b84"
-            className="cursor-pointer hover:scale-125 transition-all"
+            className="transition-all cursor-pointer hover:scale-125"
           />
         </div>
       </div>
