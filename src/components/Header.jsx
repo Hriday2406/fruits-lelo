@@ -2,6 +2,7 @@ import Icon from "@mdi/react";
 import { mdiMagnify, mdiWindowClose, mdiHeart, mdiCart } from "@mdi/js";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 export default function Header() {
   const searchRef = useRef(null);
@@ -10,38 +11,32 @@ export default function Header() {
 
   return (
     <header className="flex justify-between px-10 py-6">
-      <div className="flex items-center gap-6 select-none">
-        <h1
-          className="text-3xl font-bold cursor-pointer text-accent "
-          onClick={() => {
-            navigate("/");
-          }}
+      <div className="flex select-none items-center gap-6">
+        <Link
+          to={"/"}
+          className="cursor-pointer text-3xl font-bold text-accent transition-all hover:drop-shadow-[0_0_10px]"
         >
           Fruits Lelo.
-        </h1>
+        </Link>
         <nav className="flex gap-3">
-          <p
-            className="cursor-pointer"
-            onClick={() => {
-              navigate("/");
-            }}
+          <Link
+            className="cursor-pointer border-b-2 border-bg px-1 transition-all hover:border-b-2 hover:border-accent hover:drop-shadow-[0_0_20px_#AE9B84]"
+            to={"/"}
           >
             Home
-          </p>
-          <p
-            className="cursor-pointer"
-            onClick={() => {
-              navigate("/store");
-            }}
+          </Link>
+          <Link
+            className="cursor-pointer border-b-2 border-bg px-1 transition-all hover:border-b-2 hover:border-accent hover:drop-shadow-[0_0_20px_#AE9B84]"
+            to={"/store"}
           >
             Store
-          </p>
+          </Link>
         </nav>
       </div>
       <div className="flex items-center gap-11">
         <form
           action=""
-          className="flex items-center p-3 select-none bg-secondary rounded-3xl"
+          className="flex select-none items-center rounded-3xl bg-secondary p-3"
           onClick={() => {
             searchRef.current.focus();
           }}
@@ -49,7 +44,7 @@ export default function Header() {
           <Icon path={mdiMagnify} size={1} color="#ae9b84" />
           <input
             type="text"
-            className="px-3 border-none outline-none bg-secondary caret-accent placeholder:text-white"
+            className="border-none bg-secondary px-3 caret-accent outline-none placeholder:text-white"
             ref={searchRef}
             placeholder="Search"
             onChange={(e) => {
@@ -59,7 +54,7 @@ export default function Header() {
           <Icon
             path={mdiWindowClose}
             size={0.9}
-            className="transition-all cursor-pointer hover:scale-125"
+            className="cursor-pointer transition-all hover:scale-125"
             onClick={() => {
               searchRef.current.value = "";
               setSearchValue("");
@@ -71,13 +66,13 @@ export default function Header() {
             path={mdiHeart}
             size={1}
             color="#ae9b84"
-            className="transition-all cursor-pointer hover:scale-125"
+            className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
           />
           <Icon
             path={mdiCart}
             size={1}
             color="#ae9b84"
-            className="transition-all cursor-pointer hover:scale-125"
+            className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
           />
         </div>
       </div>
