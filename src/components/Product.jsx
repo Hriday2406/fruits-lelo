@@ -26,21 +26,21 @@ export default function Product() {
       <Icon
         path={mdiKeyboardBackspace}
         size={1.5}
-        className="absolute transition-all cursor-pointer text-accent top-5 left-10 hover:scale-125"
+        className="absolute left-10 top-5 cursor-pointer text-accent transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
         onClick={() => {
           navigate(-1);
         }}
       />
-      <div className="relative p-[180px] border-2 border-dashed border-dash size-[460px] select-none">
+      <div className="relative size-[460px] select-none border-2 border-dashed border-dash p-[180px]">
         <img src={fruit.src} alt={fruit.name} className="size-[100px]" />
         <Icon
           path={fruit.isFav ? mdiHeart : mdiHeartOutline}
           size={1}
-          className="absolute transition-all cursor-pointer bottom-10 left-11 hover:scale-125"
+          className="absolute bottom-10 left-11 cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red]"
           color={fruit.isFav ? "red" : "white"}
         />
       </div>
-      <div className="flex flex-col justify-between w-full gap-10">
+      <div className="flex w-full flex-col justify-between gap-10">
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl font-bold">{fruit.name}</h1>
           <h5 className="text-sm text-gray">{fruit.family} family</h5>
@@ -50,22 +50,22 @@ export default function Product() {
           </div>
           <h5 className="font-mono text-sm font-bold">${fruit.price}</h5>
           <div className="flex gap-2">
-            <button className="p-[5px] rounded-md bg-secondary size-5 hover:scale-125 transition-all">
+            <button className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125">
               <Icon path={mdiMinus} size={0.45} />
             </button>
             <span>1</span>
-            <button className="p-[5px] rounded-md bg-secondary size-5 hover:scale-125 transition-all">
+            <button className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125">
               <Icon path={mdiPlus} size={0.45} />
             </button>
           </div>
         </div>
         <div className="w-4/5 text-justify">{fruit.desc}</div>
-        <div className="flex flex-col gap-3 w-[334px] ">
-          <button className="flex justify-center gap-3 px-24 py-4 font-mono font-bold text-black bg-accent rounded-xl">
+        <div className="flex w-[334px] flex-col gap-3">
+          <button className="flex justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-bg hover:text-white hover:shadow-[0_0_10px_#AE9B84]">
             <Icon path={mdiCursorDefault} size={1} />
             Buy Now
           </button>
-          <button className="flex gap-3 px-24 py-4 font-mono font-bold rounded-xl text-accent bg-secondary">
+          <button className="flex gap-3 rounded-xl bg-secondary px-24 py-4 font-mono font-bold text-accent transition-all duration-500 hover:bg-accent hover:text-black hover:shadow-[0_0_10px] hover:shadow-accent">
             <Icon path={mdiCart} size={1} />
             Add To Cart
           </button>
