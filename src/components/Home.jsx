@@ -37,17 +37,20 @@ export default function Home() {
       </div>
       <div className="w-[775px]">
         <Slider {...settings}>
-          {FRUITS.map((fruit) => (
-            <div
-              className="relative p-[75px] border-2 border-dashed size-[229px] border-dash rounded-2xl"
-              key={fruit.name}
-            >
-              <img src={fruit.src} alt={fruit.name} className="size-[75px]" />
-              <span className="absolute font-bold left-4 bottom-4">
-                {fruit.name}
-              </span>
-            </div>
-          ))}
+          {FRUITS.map((fruit, index) => {
+            if (index > 5) return;
+            return (
+              <div
+                className="relative p-[75px] border-2 border-dashed size-[229px] border-dash rounded-2xl"
+                key={fruit.name}
+              >
+                <img src={fruit.src} alt={fruit.name} className="size-[75px]" />
+                <span className="absolute font-bold left-4 bottom-4">
+                  {fruit.name}
+                </span>
+              </div>
+            );
+          })}
         </Slider>
       </div>
     </main>
