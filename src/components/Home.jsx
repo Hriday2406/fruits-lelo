@@ -2,6 +2,7 @@ import { FRUITS } from "../utils/constants";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { Link, useNavigate } from "react-router-dom";
 
 function SliderArrows() {
   return null;
@@ -22,6 +23,8 @@ export default function Home() {
     nextArrow: <SliderArrows />,
     prevArrow: <SliderArrows />,
   };
+  const navigate = useNavigate();
+
   return (
     <main className="flex flex-col items-center justify-center h-full gap-20 py-20">
       <div className="flex flex-col items-center gap-12 text-center">
@@ -31,24 +34,32 @@ export default function Home() {
           vitality se bharpur hai. Seedha farm se aapke table tak deliver kiya
           jata hai.
         </p>
-        <button className="px-6 py-3 font-mono font-medium text-black bg-accent rounded-xl">
+        <button
+          className="px-6 py-3 font-mono font-medium text-black bg-accent rounded-xl hover:bg-bg hover:text-white hover:shadow-[0_0_15px] transition-all duration-500 hover:shadow-accent"
+          onClick={() => {
+            navigate("/store");
+          }}
+        >
           Shop Now
         </button>
       </div>
-      <div className="w-[775px]">
+      <div className="w-[810px]">
         <Slider {...settings}>
           {FRUITS.map((fruit, index) => {
             if (index > 5) return;
             return (
-              <div
-                className="relative p-[75px] border-2 border-dashed size-[229px] border-dash rounded-2xl"
-                key={fruit.name}
-              >
-                <img src={fruit.src} alt={fruit.name} className="size-[75px]" />
-                <span className="absolute font-bold left-4 bottom-4">
-                  {fruit.name}
-                </span>
-              </div>
+              <Link to={`/store/${fruit.slug}`} key={fruit.name}>
+                <div className="relative p-[75px] border-2 border-dashed size-[229px] border-dash rounded-2xl hover:shadow-[0_0_20px] transition-all duration-500 hover:shadow-accent">
+                  <img
+                    src={fruit.src}
+                    alt={fruit.name}
+                    className="size-[75px]"
+                  />
+                  <span className="absolute font-bold left-4 bottom-4">
+                    {fruit.name}
+                  </span>
+                </div>
+              </Link>
             );
           })}
         </Slider>
