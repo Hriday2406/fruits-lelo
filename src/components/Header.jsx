@@ -75,7 +75,13 @@ export default function Header() {
               },
             }}
           >
-            <Badge count={favs.length} color="black" offset={[5, -5]} showZero>
+            <Badge
+              count={favs.length}
+              color="black"
+              offset={[5, -5]}
+              showZero
+              className="select-none"
+            >
               <Icon
                 path={mdiHeart}
                 size={1}
@@ -93,6 +99,7 @@ export default function Header() {
                 color="#00000000"
                 offset={[5, -5]}
                 showZero
+                className="select-none"
               >
                 <Icon
                   path={mdiCart}
