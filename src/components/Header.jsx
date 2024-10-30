@@ -1,15 +1,18 @@
 import Icon from "@mdi/react";
 import { mdiMagnify, mdiWindowClose, mdiHeart, mdiCart } from "@mdi/js";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { ConfigProvider, Popover } from "antd";
+import { Badge, ConfigProvider, Popover } from "antd";
 import CartCard from "./cartCard";
+import { CartContext, FavContext } from "./App";
 
 export default function Header() {
   const searchRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
+  const { favs } = useContext(FavContext);
+  const { cart } = useContext(CartContext);
 
   return (
     <header className="flex justify-between px-10 py-6">
@@ -64,33 +67,43 @@ export default function Header() {
           />
         </form>
         <div className="flex gap-7">
-          <Icon
-            path={mdiHeart}
-            size={1}
-            color="#ae9b84"
-            className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
-          />
           <ConfigProvider
             theme={{
               token: {
                 colorBgElevated: "#0f0f0f",
+                colorBorderBg: "#AE9B84",
               },
             }}
           >
+            <Badge count={favs.length} color="black" offset={[5, -5]} showZero>
+              <Icon
+                path={mdiHeart}
+                size={1}
+                color="#ae9b84"
+                className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
+              />
+            </Badge>
             <Popover
               content={<CartCard />}
               placement="bottomRight"
               arrow={false}
             >
-              <Icon
-                path={mdiCart}
-                size={1}
-                color="#ae9b84"
-                className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
-                onClick={() => {
-                  navigate("/cart");
-                }}
-              />
+              <Badge
+                count={cart.length}
+                color="#00000000"
+                offset={[5, -5]}
+                showZero
+              >
+                <Icon
+                  path={mdiCart}
+                  size={1}
+                  color="#ae9b84"
+                  className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
+                  onClick={() => {
+                    navigate("/cart");
+                  }}
+                />
+              </Badge>
             </Popover>
           </ConfigProvider>
         </div>
