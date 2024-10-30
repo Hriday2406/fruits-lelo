@@ -9,7 +9,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Citrus",
-    color: ["Orange"],
+    colors: ["Orange"],
     vitamins: ["C"],
   },
   {
@@ -22,7 +22,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Gourd",
-    color: ["Green"],
+    colors: ["Green"],
     vitamins: ["A", "C"],
   },
   {
@@ -35,7 +35,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Gourd",
-    color: ["Red", "Green"],
+    colors: ["Red", "Green"],
     vitamins: ["A", "C"],
   },
   {
@@ -48,7 +48,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Citrus",
-    color: ["Yellow"],
+    colors: ["Yellow"],
     vitamins: ["C"],
   },
   {
@@ -61,7 +61,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Other",
-    color: ["Yellow"],
+    colors: ["Yellow"],
     vitamins: ["B6"],
   },
   {
@@ -74,7 +74,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Other",
-    color: ["Yellow", "Green"],
+    colors: ["Yellow", "Green"],
     vitamins: ["C", "B6"],
   },
   {
@@ -87,7 +87,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Cashew",
-    color: ["Yellow", "Red", "Green"],
+    colors: ["Yellow", "Red", "Green"],
     vitamins: ["A", "C"],
   },
   {
@@ -139,7 +139,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Rose",
-    color: ["Orange"],
+    colors: ["Orange"],
     vitamins: ["A", "C"],
   },
   {
@@ -152,7 +152,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Rose",
-    color: ["Red", "Green"],
+    colors: ["Red", "Green"],
     vitamins: ["C"],
   },
   {
@@ -191,7 +191,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Berry",
-    color: ["Purple"],
+    colors: ["Purple"],
     vitamins: ["C", "K"],
   },
   {
@@ -204,7 +204,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Other",
-    color: ["Green", "Brown"],
+    colors: ["Green", "Brown"],
     vitamins: ["C", "K"],
   },
   {
@@ -230,7 +230,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Other",
-    color: ["Green"],
+    colors: ["Green"],
     vitamins: ["E", "K"],
   },
   {
@@ -256,7 +256,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Laurel",
-    color: ["Green", "Brown"],
+    colors: ["Green", "Brown"],
     vitamins: ["K", "E"],
   },
   {
@@ -282,7 +282,7 @@ export const FRUITS = [
     isFav: false,
     inCart: false,
     family: "Gourd",
-    color: ["Green"],
+    colors: ["Green"],
     vitamins: ["K"],
   },
   {
