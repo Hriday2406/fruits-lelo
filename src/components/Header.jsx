@@ -3,11 +3,12 @@ import { mdiMagnify, mdiWindowClose, mdiHeart, mdiCart } from "@mdi/js";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
+import { ConfigProvider, Popover } from "antd";
+import CartCard from "./cartCard";
 
 export default function Header() {
   const searchRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
-  const navigate = useNavigate();
 
   return (
     <header className="flex justify-between px-10 py-6">
@@ -68,12 +69,26 @@ export default function Header() {
             color="#ae9b84"
             className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
           />
-          <Icon
-            path={mdiCart}
-            size={1}
-            color="#ae9b84"
-            className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
-          />
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgElevated: "#0f0f0f",
+              },
+            }}
+          >
+            <Popover
+              content={<CartCard />}
+              placement="bottomRight"
+              arrow={false}
+            >
+              <Icon
+                path={mdiCart}
+                size={1}
+                color="#ae9b84"
+                className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
+              />
+            </Popover>
+          </ConfigProvider>
         </div>
       </div>
     </header>
