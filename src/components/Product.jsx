@@ -83,7 +83,12 @@ export default function Product() {
         </div>
         <div className="w-3/5 text-justify">{fruit.desc}</div>
         <div className="flex w-[334px] flex-col gap-3">
-          <button className="flex justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]">
+          <button
+            className="flex justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]"
+            onClick={() => {
+              navigate("/cart");
+            }}
+          >
             <Icon path={mdiCursorDefault} size={1} />
             Buy Now
           </button>

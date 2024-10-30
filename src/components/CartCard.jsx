@@ -1,8 +1,10 @@
 import { FRUITS } from "../utils/constants";
 import Icon from "@mdi/react";
 import { mdiCart, mdiCheckAll, mdiTrashCan } from "@mdi/js";
+import { useNavigate } from "react-router";
 
 export default function CartCard() {
+  const navigate = useNavigate();
   return (
     <div className="rounded-2xl border-2 border-dashed border-dash px-9 py-9 text-white shadow-[0_0_15px_#AE9B84]">
       <h2 className="border-b-[1px] border-gray pb-6 text-2xl font-bold">
@@ -41,11 +43,23 @@ export default function CartCard() {
         <span>$19.5</span>
       </div>
       <div className="flex w-[380px] flex-col gap-3">
-        <button className="flex items-center justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]">
+        <button
+          className="flex items-center justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]"
+          onClick={() => {
+            alert(
+              "Yay! You have bought the fruits! It will be delivered to you.",
+            );
+          }}
+        >
           <Icon path={mdiCheckAll} size={0.8} />
           Checkout
         </button>
-        <button className="flex items-center justify-center gap-3 rounded-xl bg-secondary px-24 py-4 font-mono font-bold text-accent transition-all duration-500 hover:bg-accent hover:text-black hover:shadow-[0_0_10px] hover:shadow-accent">
+        <button
+          className="flex items-center justify-center gap-3 rounded-xl bg-secondary px-24 py-4 font-mono font-bold text-accent transition-all duration-500 hover:bg-accent hover:text-black hover:shadow-[0_0_10px] hover:shadow-accent"
+          onClick={() => {
+            navigate("/cart");
+          }}
+        >
           <Icon path={mdiCart} size={0.8} />
           See in Cart
         </button>

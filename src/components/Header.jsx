@@ -9,6 +9,7 @@ import CartCard from "./cartCard";
 export default function Header() {
   const searchRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
+  const navigate = useNavigate();
 
   return (
     <header className="flex justify-between px-10 py-6">
@@ -86,6 +87,9 @@ export default function Header() {
                 size={1}
                 color="#ae9b84"
                 className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
+                onClick={() => {
+                  navigate("/cart");
+                }}
               />
             </Popover>
           </ConfigProvider>

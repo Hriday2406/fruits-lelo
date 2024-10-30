@@ -3,23 +3,19 @@ import Header from "./Header";
 import Store from "./Store";
 import Home from "./Home";
 import Product from "./Product";
+import Cart from "./Cart";
 
 function App() {
   return (
-    <div className="w-full text-white bg-bg font-body">
+    <div className="w-full bg-bg font-body text-white">
       <Header />
 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/store" element={<Store />} />
         <Route path="/store/:slug" element={<Product />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
-
-      {/* <div className="min-h-screen p-5">
-        <h1 className="p-5 font-mono font-bold text-center text-black bg-accent rounded-2xl">
-          Fruits Lelo.
-        </h1>
-      </div> */}
     </div>
   );
 }
