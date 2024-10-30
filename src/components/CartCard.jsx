@@ -2,17 +2,39 @@ import { FRUITS } from "../utils/constants";
 import Icon from "@mdi/react";
 import { mdiCart, mdiCheckAll, mdiTrashCan } from "@mdi/js";
 import { useNavigate } from "react-router";
+import { useContext, useEffect, useState } from "react";
+import { CartContext } from "./App";
 
 export default function CartCard() {
   const navigate = useNavigate();
+  const { cart, setCart } = useContext(CartContext);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    let temp = 0;
+    for (let i = 0; i < cart.length; i++)
+      temp += FRUITS[cart[i].fruitId].price * cart[i].count;
+    setTotal(temp);
+  }, [cart]);
+
+  function handleDelete(index) {
+    setCart((prev) => {
+      const newCart = [...prev];
+      newCart.splice(index, 1);
+      return newCart;
+    });
+  }
+
   return (
-    <div className="rounded-2xl border-2 border-dashed border-dash px-9 py-9 text-white shadow-[0_0_15px_#AE9B84]">
+    <div className="rounded-2xl border-2 border-dashed border-dash p-9 text-white shadow-[0_0_15px_#AE9B84]">
       <h2 className="border-b-[1px] border-gray pb-6 text-2xl font-bold">
         Shopping Cart
       </h2>
-      <div className="flex flex-col gap-[25px] py-12">
-        {FRUITS.map((fruit, index) => {
-          if (index > 1) return;
+      <div className="flex flex-col gap-[25px] py-9">
+        {cart.map((item, index) => {
+          console.log(cart);
+          const fruit = FRUITS[item.fruitId];
+
           return (
             <div className="flex items-center gap-[25px]" key={fruit.id}>
               <div className="shrink-0 rounded-2xl border-2 border-dashed border-dash p-[25px]">
@@ -22,7 +44,7 @@ export default function CartCard() {
                 <div className="flex flex-col justify-between">
                   <h3 className="font-bold">{fruit.name}</h3>
                   <span className="text-gray">{fruit.family}</span>
-                  <span className="text-gray">Qty: 5</span>
+                  <span className="text-gray">Qty: {item.count}</span>
                 </div>
                 <div className="flex h-full items-center gap-5 font-mono font-bold">
                   <Icon
@@ -30,6 +52,9 @@ export default function CartCard() {
                     size={1.1}
                     color="red"
                     className="cursor-pointer rounded-md bg-secondary p-1 transition-all hover:scale-125"
+                    onClick={() => {
+                      handleDelete(index);
+                    }}
                   />
                   <span>${fruit.price}</span>
                 </div>
@@ -37,15 +62,27 @@ export default function CartCard() {
             </div>
           );
         })}
+        {cart.length == 0 && (
+          <p className="text-center font-mono text-lg text-accent">
+            CART IS EMPTY.
+          </p>
+        )}
       </div>
       <div className="flex justify-between border-t-[1px] border-gray py-6 font-mono text-2xl font-bold">
         <span>Total</span>
-        <span>$19.5</span>
+        <span>${total}</span>
       </div>
       <div className="flex w-[380px] flex-col gap-3">
         <button
           className="flex items-center justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]"
           onClick={() => {
+            if (cart.length == 0) {
+              alert(
+                "You cannot checkout with an empty cart, put some fruits in the cart first.",
+              );
+              return;
+            }
+
             alert(
               "Yay! You have bought the fruits! It will be delivered to you.",
             );
@@ -61,7 +98,7 @@ export default function CartCard() {
           }}
         >
           <Icon path={mdiCart} size={0.8} />
-          See in Cart
+          Open Cart
         </button>
       </div>
     </div>
