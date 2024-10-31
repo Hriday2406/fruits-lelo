@@ -72,8 +72,12 @@ export default function Product() {
           navigate(-1);
         }}
       />
-      <div className="relative shrink-0 select-none border-2 border-dashed border-dash p-[180px]">
-        <img src={fruit.src} alt={fruit.name} className="size-[100px]" />
+      <div className="group relative shrink-0 select-none rounded-2xl border-2 border-dashed border-dash p-[180px]">
+        <img
+          src={fruit.src}
+          alt={fruit.name}
+          className="size-[100px] transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84]"
+        />
         <Icon
           path={fav ? mdiHeart : mdiHeartOutline}
           size={1}

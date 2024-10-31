@@ -70,14 +70,13 @@ export default function Header() {
           <ConfigProvider
             theme={{
               token: {
-                colorBgElevated: "#0f0f0f",
                 colorBorderBg: "#AE9B84",
               },
             }}
           >
             <Badge
               count={favs.length}
-              color="black"
+              color="#00000000"
               offset={[5, -5]}
               showZero
               className="select-none"
@@ -93,6 +92,7 @@ export default function Header() {
               content={<CartCard />}
               placement="bottomRight"
               arrow={false}
+              color="#0f0f0f"
             >
               <Badge
                 count={cart.length}

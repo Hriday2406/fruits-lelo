@@ -49,11 +49,11 @@ export default function Home() {
             if (index > 5) return;
             return (
               <Link to={`/store/${fruit.slug}`} key={fruit.name}>
-                <div className="relative rounded-2xl border-2 border-dashed border-dash p-[75px] transition-all duration-500 hover:shadow-[0_0_20px] hover:shadow-accent">
+                <div className="group relative rounded-2xl border-2 border-dashed border-dash p-[75px]">
                   <img
                     src={fruit.src}
                     alt={fruit.name}
-                    className="size-[75px]"
+                    className="size-[75px] transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84]"
                   />
                   <span className="absolute bottom-4 left-4 font-bold">
                     {fruit.name}

@@ -32,8 +32,6 @@ export default function Cart() {
     setTotal(temp);
   }, [cart]);
 
-  // <Link to={`/store/${fruit.slug}`} key={fruit.name}></Link>
-
   return (
     <div className="relative flex items-start justify-between px-14 py-32">
       <div className="absolute left-10 top-5">
@@ -52,12 +50,15 @@ export default function Cart() {
           const fruit = FRUITS[item.fruitId];
           return (
             <div className="flex items-center gap-[25px]" key={fruit.id}>
-              <Link to={`/store/${fruit.slug}`} className="shrink-0">
+              <Link
+                to={`/store/${fruit.slug}`}
+                className="group shrink-0 select-none"
+              >
                 <div className="shrink-0 rounded-2xl border-2 border-dashed border-dash p-[40px]">
                   <img
                     src={fruit.src}
                     alt={fruit.name}
-                    className="size-[40px]"
+                    className="size-[40px] transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_15px_#AE9B84]"
                   />
                 </div>
               </Link>
