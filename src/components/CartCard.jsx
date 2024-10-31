@@ -10,6 +10,11 @@ export default function CartCard() {
   const { cart, setCart } = useContext(CartContext);
   const [total, setTotal] = useState(0);
 
+  function getQty(id) {
+    for (let i in cart) if (cart[i].fruitId == id) return cart[i].count;
+    return 1;
+  }
+
   useEffect(() => {
     let temp = 0;
     for (let i = 0; i < cart.length; i++)
@@ -32,7 +37,6 @@ export default function CartCard() {
       </h2>
       <div className="flex flex-col gap-[25px] py-9">
         {cart.map((item, index) => {
-          console.log(cart);
           const fruit = FRUITS[item.fruitId];
 
           return (
@@ -41,12 +45,12 @@ export default function CartCard() {
                 <img src={fruit.src} alt={fruit.name} className="size-[25px]" />
               </div>
               <div className="flex w-full items-center justify-between">
-                <div className="flex flex-col justify-between">
-                  <h3 className="font-bold">{fruit.name}</h3>
-                  <span className="text-gray">{fruit.family}</span>
-                  <span className="text-gray">Qty: {item.count}</span>
-                </div>
-                <div className="flex h-full items-center gap-5 font-mono font-bold">
+                <div className="flex w-2/5 items-center justify-between">
+                  <div className="flex flex-col justify-between">
+                    <h3 className="font-bold">{fruit.name}</h3>
+                    <span className="text-gray">{fruit.family}</span>
+                    <span className="text-gray">Qty: {item.count}</span>
+                  </div>
                   <Icon
                     path={mdiTrashCan}
                     size={1.1}
@@ -56,7 +60,12 @@ export default function CartCard() {
                       handleDelete(index);
                     }}
                   />
-                  <span>${fruit.price}</span>
+                </div>
+                <div className="flex h-full items-center gap-5 font-mono font-bold">
+                  <span>
+                    ${fruit.price} x {getQty(fruit.id)} = $
+                    {fruit.price * getQty(fruit.id)}{" "}
+                  </span>
                 </div>
               </div>
             </div>
