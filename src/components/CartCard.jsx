@@ -10,11 +10,6 @@ export default function CartCard() {
   const { cart, setCart } = useContext(CartContext);
   const [total, setTotal] = useState(0);
 
-  function getQty(id) {
-    for (let i in cart) if (cart[i].fruitId == id) return cart[i].count;
-    return 1;
-  }
-
   useEffect(() => {
     let temp = 0;
     for (let i = 0; i < cart.length; i++)
@@ -31,11 +26,11 @@ export default function CartCard() {
   }
 
   return (
-    <div className="rounded-2xl border-2 border-dashed border-dash p-9 text-white shadow-[0_0_15px_#AE9B84]">
+    <div className="overflow-hidden rounded-2xl border-2 border-dashed border-dash p-9 text-white shadow-[0_0_15px_#AE9B84]">
       <h2 className="border-b-[1px] border-gray pb-6 text-2xl font-bold">
         Shopping Cart
       </h2>
-      <div className="flex flex-col gap-[25px] py-9">
+      <div className="flex max-h-[362px] flex-col gap-[25px] overflow-y-auto py-9 pr-5">
         {cart.map((item, index) => {
           const fruit = FRUITS[item.fruitId];
 
@@ -63,8 +58,8 @@ export default function CartCard() {
                 </div>
                 <div className="flex h-full items-center gap-5 font-mono font-bold">
                   <span>
-                    ${fruit.price} x {getQty(fruit.id)} = $
-                    {fruit.price * getQty(fruit.id)}{" "}
+                    ${fruit.price} x {item.count} = $
+                    {(fruit.price * item.count).toFixed(1)}
                   </span>
                 </div>
               </div>
@@ -79,9 +74,9 @@ export default function CartCard() {
       </div>
       <div className="flex justify-between border-t-[1px] border-gray py-6 font-mono text-2xl font-bold">
         <span>Total</span>
-        <span>${total}</span>
+        <span>${total.toFixed(1)}</span>
       </div>
-      <div className="flex w-[380px] flex-col gap-3">
+      <div className="flex w-[415px] flex-col gap-3">
         <button
           className="flex items-center justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]"
           onClick={() => {
@@ -95,6 +90,7 @@ export default function CartCard() {
             alert(
               "Yay! You have bought the fruits! It will be delivered to you.",
             );
+            setCart([]);
           }}
         >
           <Icon path={mdiCheckAll} size={0.8} />

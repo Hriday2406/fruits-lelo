@@ -115,7 +115,7 @@ export default function Product() {
             <button
               className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125"
               onClick={() => {
-                if (qty == 0) return;
+                if (qty == 1) return;
                 setQty(qty - 1);
                 if (isInCart(fruit.id)) {
                   setCart((prev) => {
