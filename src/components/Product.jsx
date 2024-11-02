@@ -47,11 +47,6 @@ export default function Product() {
     return false;
   }
 
-  function isFav(id) {
-    for (let i in favs) if (favs[i] == id) return true;
-    return false;
-  }
-
   function getQty(id) {
     for (let i in cart) if (cart[i].fruitId == id) return cart[i].count;
     return 1;
@@ -59,7 +54,7 @@ export default function Product() {
 
   useEffect(() => {
     if (isInCart(fruit.id)) setQty(getQty);
-    if (isFav(fruit.id)) setFav(true);
+    if (favs.includes(fruit.id)) setFav(true);
   }, []);
 
   return (
@@ -87,7 +82,7 @@ export default function Product() {
             setFav(!fav);
             setFavs((prev) => {
               const newArr = [...prev];
-              if (isFav(fruit.id)) {
+              if (favs.includes(fruit.id)) {
                 for (let i in newArr)
                   if (favs[i] == fruit.id) newArr.splice(i, 1);
                 return newArr;

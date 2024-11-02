@@ -325,3 +325,32 @@ export const FRUITS = [
     vitamins: ["A"],
   },
 ];
+
+export const COLOROPTIONS = [
+  "Purple",
+  "Green",
+  "Brown",
+  "Red",
+  "Orange",
+  "Yellow",
+  "Blue",
+  "Black",
+];
+export const FAMILYOPTIONS = [
+  { label: "Rose", value: "Rose" },
+  { label: "Citrus", value: "Citrus" },
+  { label: "Nightshade", value: "Nightshade" },
+  { label: "Gourd", value: "Gourd" },
+  { label: "Palm", value: "Palm" },
+  { label: "Cashew", value: "Cashew" },
+  { label: "Berry", value: "Berry" },
+  { label: "Laurel", value: "Laurel" },
+  { label: "Other", value: "Other" },
+];
+export const VITAMINSOPTIONS = [
+  { label: "Vitamin C", value: "C" },
+  { label: "Vitamin A", value: "A" },
+  { label: "Vitamin K", value: "K" },
+  { label: "Vitamin E", value: "E" },
+  { label: "Vitamin B6", value: "B6" },
+];
