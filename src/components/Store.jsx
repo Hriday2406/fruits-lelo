@@ -97,7 +97,7 @@ function Aside({ filters, setFilters }) {
   }, [colors, families, vitamins]);
 
   return (
-    <div className="w-72 shrink-0 p-10">
+    <div className="w-72 shrink-0 select-none p-10">
       <div className="">
         <div className="flex items-center justify-between bg-bg">
           <h1 className="text-2xl font-bold">
@@ -114,7 +114,7 @@ function Aside({ filters, setFilters }) {
           />
         </div>
         <div
-          className={`m-6 origin-top transition-all duration-500 ${isColorOpen ? "" : "scale-y-0"}`}
+          className={`m-6 origin-top overflow-hidden transition-all duration-500 ${isColorOpen ? "h-72" : "h-0"}`}
         >
           <Checkbox.Group className="flex gap-5">
             {COLOROPTIONS.map((color, index) => (
@@ -158,7 +158,7 @@ function Aside({ filters, setFilters }) {
             <Checkbox.Group
               options={FAMILYOPTIONS}
               defaultValue={[]}
-              className={`flex origin-top flex-col gap-5 transition-all duration-500 ${isFamilyOpen ? "" : "scale-y-0"}`}
+              className={`flex origin-top flex-col flex-nowrap gap-5 overflow-hidden transition-all duration-500 ${isFamilyOpen ? "h-[366px]" : "h-0"}`}
               onChange={handleFamilyChange}
               value={families}
             />
@@ -196,7 +196,7 @@ function Aside({ filters, setFilters }) {
             <Checkbox.Group
               options={VITAMINSOPTIONS}
               defaultValue={[]}
-              className={`flex origin-top flex-col gap-5 transition-all duration-500 ${isVitaminOpen ? "" : "scale-y-0"}`}
+              className={`flex origin-top flex-col flex-nowrap gap-5 overflow-hidden transition-all duration-500 ${isVitaminOpen ? "h-48" : "h-0"}`}
               onChange={handleVitaminsChange}
             />
           </ConfigProvider>
