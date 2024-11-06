@@ -20,6 +20,8 @@ import { CartContext, FavContext } from "./App";
 import { Link } from "react-router-dom";
 
 function Tags({ text, setFilters }) {
+  // console.log(text);
+  if (text == "") return null;
   let textToDisplay = text.length <= 2 ? "Vitamin " + text : text;
   return (
     <div className="flex select-none items-center gap-1 rounded-full bg-accent px-3 py-1 font-mono text-xs font-black text-black">
@@ -67,10 +69,14 @@ function ColorCheckBox({ color, onClick }) {
   );
 }
 
-function Aside({ filters, setFilters }) {
-  const [colors, setColors] = useState([]);
-  const [families, setFamilies] = useState([]);
-  const [vitamins, setVitamins] = useState([]);
+function Aside({
+  colors,
+  setColors,
+  family,
+  setFamily,
+  vitamins,
+  setVitamins,
+}) {
   const [isColorOpen, setIsColorOpen] = useState(true);
   const [isFamilyOpen, setIsFamilyOpen] = useState(true);
   const [isVitaminOpen, setIsVitaminOpen] = useState(true);
@@ -83,18 +89,12 @@ function Aside({ filters, setFilters }) {
     setColors(newColors);
   }
   function handleFamilyChange(checkedValues) {
-    const newValues = [...checkedValues];
-    if (families.length != 0)
-      newValues.splice(newValues.indexOf(families[0]), 1);
-    setFamilies(newValues);
+    if (checkedValues.length == 0) setFamily("");
+    else setFamily(checkedValues[0]);
   }
   function handleVitaminsChange(checkedValues) {
     setVitamins(checkedValues);
   }
-
-  useEffect(() => {
-    setFilters(colors.concat(families).concat(vitamins));
-  }, [colors, families, vitamins]);
 
   return (
     <div className="w-72 shrink-0 select-none p-10">
@@ -130,7 +130,7 @@ function Aside({ filters, setFilters }) {
       <div className="">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">
-            Family {families.length > 0 ? `(${families.length})` : ""}
+            Family {family != "" ? "(1)" : ""}
           </h1>
           <Icon
             path={isFamilyOpen ? mdiChevronDown : mdiChevronUp}
@@ -160,7 +160,7 @@ function Aside({ filters, setFilters }) {
               defaultValue={[]}
               className={`flex origin-top flex-col flex-nowrap gap-5 overflow-hidden transition-all duration-500 ${isFamilyOpen ? "h-[366px]" : "h-0"}`}
               onChange={handleFamilyChange}
-              value={families}
+              value={family}
             />
           </ConfigProvider>
         </div>
@@ -207,9 +207,40 @@ function Aside({ filters, setFilters }) {
 }
 
 export default function Store() {
+  const [colors, setColors] = useState([]);
+  const [family, setFamily] = useState("");
+  const [vitamins, setVitamins] = useState([]);
   const [filters, setFilters] = useState([]);
+  const [filteredFruits, setFilteredFruits] = useState(FRUITS);
   const { favs, setFavs } = useContext(FavContext);
   const { cart, setCart } = useContext(CartContext);
+
+  useEffect(() => {
+    setFilters(colors.concat(family).concat(vitamins));
+    let tempArr = [...FRUITS];
+    if (colors.length > 0) {
+      tempArr = tempArr.filter((fruit) => {
+        return (
+          colors.filter((color) => {
+            return fruit.colors.includes(color);
+          }).length == colors.length
+        );
+      });
+    }
+    if (family != "") {
+      tempArr = tempArr.filter((fruit) => fruit.family == family);
+    }
+    if (vitamins.length > 0) {
+      tempArr = tempArr.filter((fruit) => {
+        return (
+          vitamins.filter((vitamin) => {
+            return fruit.vitamins.includes(vitamin);
+          }).length == vitamins.length
+        );
+      });
+    }
+    setFilteredFruits(tempArr);
+  }, [colors, family, vitamins]);
 
   function isInCart(id) {
     for (let i in cart) if (cart[i].fruitId == id) return true;
@@ -218,7 +249,16 @@ export default function Store() {
 
   return (
     <section className="flex">
-      <Aside filters={filters} setFilters={setFilters} />
+      <Aside
+        filters={filters}
+        setFilters={setFilters}
+        colors={colors}
+        setColors={setColors}
+        family={family}
+        setFamily={setFamily}
+        vitamins={vitamins}
+        setVitamins={setVitamins}
+      />
       <div className="flex w-full flex-col items-start gap-5 pr-10 pt-10">
         <h1 className="text-2xl font-bold">Items ( {25} )</h1>
         <div className="flex gap-3">
@@ -227,7 +267,7 @@ export default function Store() {
           ))}
         </div>
         <div className="flex flex-wrap gap-7">
-          {FRUITS.map((fruit, index) => {
+          {filteredFruits.map((fruit, index) => {
             return (
               <div
                 className="group relative shrink-0 select-none rounded-2xl border-2 border-dashed border-dash"
