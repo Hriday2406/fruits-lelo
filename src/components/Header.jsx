@@ -1,5 +1,11 @@
 import Icon from "@mdi/react";
-import { mdiMagnify, mdiWindowClose, mdiHeart, mdiCart } from "@mdi/js";
+import {
+  mdiMagnify,
+  mdiWindowClose,
+  mdiHeart,
+  mdiCart,
+  mdiHeartOutline,
+} from "@mdi/js";
 import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -7,9 +13,8 @@ import { Badge, ConfigProvider, Popover } from "antd";
 import CartCard from "./cartCard";
 import { CartContext, FavContext } from "./App";
 
-export default function Header() {
+export default function Header({ setSearchText, showFav, setShowFav }) {
   const searchRef = useRef(null);
-  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   const { favs } = useContext(FavContext);
   const { cart } = useContext(CartContext);
@@ -53,7 +58,7 @@ export default function Header() {
             ref={searchRef}
             placeholder="Search"
             onChange={(e) => {
-              setSearchValue(e.target.value);
+              setSearchText(e.target.value);
             }}
           />
           <Icon
@@ -62,7 +67,7 @@ export default function Header() {
             className="cursor-pointer transition-all hover:scale-125"
             onClick={() => {
               searchRef.current.value = "";
-              setSearchValue("");
+              setSearchText("");
             }}
           />
         </form>
@@ -81,12 +86,17 @@ export default function Header() {
               showZero
               className="select-none"
             >
-              <Icon
-                path={mdiHeart}
-                size={1}
-                color="#ae9b84"
-                className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
-              />
+              <Link to={"/store"}>
+                <Icon
+                  path={showFav ? mdiHeart : mdiHeartOutline}
+                  size={1}
+                  color="#ae9b84"
+                  className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
+                  onClick={() => {
+                    setShowFav((prev) => !prev);
+                  }}
+                />
+              </Link>
             </Badge>
             <Popover
               content={<CartCard />}
