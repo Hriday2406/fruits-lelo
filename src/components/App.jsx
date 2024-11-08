@@ -5,9 +5,7 @@ import Store from "./Store";
 import Home from "./Home";
 import Product from "./Product";
 import Cart from "./Cart";
-import { FRUITS } from "../utils/constants";
 
-export const FruitsContext = createContext(FRUITS);
 export const CartContext = createContext([
   {
     fruitId: 1,
@@ -32,27 +30,33 @@ function App() {
     },
   ];
 
-  const [fruits, setFruits] = useState(FRUITS);
   const [cart, setCart] = useState(initialCart);
   const [favs, setFavs] = useState([0, 2, 4, 7]);
+  const [searchText, setSearchText] = useState("");
+  const [showFav, setShowFav] = useState(false);
 
   return (
-    <FruitsContext.Provider value={{ fruits, setFruits }}>
-      <CartContext.Provider value={{ cart, setCart }}>
-        <FavContext.Provider value={{ favs, setFavs }}>
-          <div className="w-full bg-bg font-body text-white">
-            <Header />
+    <CartContext.Provider value={{ cart, setCart }}>
+      <FavContext.Provider value={{ favs, setFavs }}>
+        <div className="w-full bg-bg font-body text-white">
+          <Header
+            setSearchText={setSearchText}
+            showFav={showFav}
+            setShowFav={setShowFav}
+          />
 
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/store" element={<Store />} />
-              <Route path="/store/:slug" element={<Product />} />
-              <Route path="/cart" element={<Cart />} />
-            </Routes>
-          </div>
-        </FavContext.Provider>
-      </CartContext.Provider>
-    </FruitsContext.Provider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/store"
+              element={<Store searchText={searchText} showFav={showFav} />}
+            />
+            <Route path="/store/:slug" element={<Product />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
+        </div>
+      </FavContext.Provider>
+    </CartContext.Provider>
   );
 }
 

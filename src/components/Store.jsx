@@ -2,7 +2,7 @@ import Icon from "@mdi/react";
 import {
   mdiChevronDown,
   mdiChevronUp,
-  mdiWindowClose,
+  // mdiWindowClose,
   mdiHeart,
   mdiHeartOutline,
   mdiCartOutline,
@@ -19,30 +19,51 @@ import {
 import { CartContext, FavContext } from "./App";
 import { Link } from "react-router-dom";
 
-function Tags({ text, setFilters }) {
-  // console.log(text);
+function Tags({ text, setFilterTags }) {
   if (text == "") return null;
-  let textToDisplay = text.length <= 2 ? "Vitamin " + text : text;
+  let textToDisplay = '"' + text + '"';
+  if (text == "C" || text == "A" || text == "K" || text == "E" || text == "B6")
+    textToDisplay = "Vitamin " + text;
+  else if (
+    text == "Rose" ||
+    text == "Citrus" ||
+    text == "Nightshade" ||
+    text == "Gourd" ||
+    text == "Palm" ||
+    text == "Cashew" ||
+    text == "Berry" ||
+    text == "Laurel" ||
+    text == "Other" ||
+    text == "Purple" ||
+    text == "Green" ||
+    text == "Brown" ||
+    text == "Red" ||
+    text == "Orange" ||
+    text == "Yellow" ||
+    text == "Blue" ||
+    text == "Black"
+  )
+    textToDisplay = text;
   return (
     <div className="flex select-none items-center gap-1 rounded-full bg-accent px-3 py-1 font-mono text-xs font-black text-black">
       <span className="">{textToDisplay}</span>
-      <Icon
+      {/* <Icon
         path={mdiWindowClose}
         size={0.6}
         className="cursor-pointer transition-all hover:scale-150"
         onClick={() => {
-          setFilters((prev) => {
+          setFilterTags((prev) => {
             const newFilters = [...prev];
             newFilters.splice(newFilters.indexOf(text), 1);
             return newFilters;
           });
         }}
-      />
+      /> */}
     </div>
   );
 }
 
-function ColorCheckBox({ color, onClick }) {
+function ColorCheckBox({ color }) {
   return (
     <ConfigProvider
       theme={{
@@ -61,7 +82,6 @@ function ColorCheckBox({ color, onClick }) {
       <Checkbox
         className="flex w-1/4 flex-col items-center justify-center gap-2"
         value={color}
-        onClick={onClick}
       >
         {color}
       </Checkbox>
@@ -81,12 +101,8 @@ function Aside({
   const [isFamilyOpen, setIsFamilyOpen] = useState(true);
   const [isVitaminOpen, setIsVitaminOpen] = useState(true);
 
-  function handleColorChange(e) {
-    let val = e.target.value;
-    const newColors = [...colors];
-    if (newColors.indexOf(val) == -1) newColors.push(val);
-    else newColors.splice(newColors.indexOf(val), 1);
-    setColors(newColors);
+  function handleColorChange(checkedValues) {
+    setColors(checkedValues);
   }
   function handleFamilyChange(checkedValues) {
     if (checkedValues.length == 0) setFamily("");
@@ -116,13 +132,13 @@ function Aside({
         <div
           className={`m-6 origin-top overflow-hidden transition-all duration-500 ${isColorOpen ? "h-72" : "h-0"}`}
         >
-          <Checkbox.Group className="flex gap-5">
+          <Checkbox.Group
+            className="flex gap-5"
+            onChange={handleColorChange}
+            value={colors}
+          >
             {COLOROPTIONS.map((color, index) => (
-              <ColorCheckBox
-                color={color}
-                onClick={handleColorChange}
-                key={color + index}
-              />
+              <ColorCheckBox color={color} key={color + index} />
             ))}
           </Checkbox.Group>
         </div>
@@ -206,18 +222,30 @@ function Aside({
   );
 }
 
-export default function Store() {
+export default function Store({ searchText, showFav }) {
   const [colors, setColors] = useState([]);
   const [family, setFamily] = useState("");
   const [vitamins, setVitamins] = useState([]);
-  const [filters, setFilters] = useState([]);
+  const [filterTags, setFilterTags] = useState([]);
   const [filteredFruits, setFilteredFruits] = useState(FRUITS);
   const { favs, setFavs } = useContext(FavContext);
   const { cart, setCart } = useContext(CartContext);
 
+  function getFavFruits() {
+    return FRUITS.filter((fruit) => favs.includes(fruit.id));
+  }
+
   useEffect(() => {
-    setFilters(colors.concat(family).concat(vitamins));
-    let tempArr = [...FRUITS];
+    setFilterTags(colors.concat(family).concat(vitamins).concat(searchText));
+    let tempArr =
+      searchText.length == 0
+        ? showFav
+          ? getFavFruits()
+          : [...FRUITS]
+        : (showFav ? getFavFruits() : FRUITS).filter((fruit) =>
+            fruit.name.toLowerCase().includes(searchText.toLowerCase()),
+          );
+
     if (colors.length > 0) {
       tempArr = tempArr.filter((fruit) => {
         return (
@@ -240,7 +268,7 @@ export default function Store() {
       });
     }
     setFilteredFruits(tempArr);
-  }, [colors, family, vitamins]);
+  }, [colors, family, vitamins, searchText, showFav]);
 
   function isInCart(id) {
     for (let i in cart) if (cart[i].fruitId == id) return true;
@@ -250,8 +278,8 @@ export default function Store() {
   return (
     <section className="flex">
       <Aside
-        filters={filters}
-        setFilters={setFilters}
+        filterTags={filterTags}
+        setFilterTags={setFilterTags}
         colors={colors}
         setColors={setColors}
         family={family}
@@ -260,10 +288,21 @@ export default function Store() {
         setVitamins={setVitamins}
       />
       <div className="flex w-full flex-col items-start gap-5 pr-10 pt-10">
-        <h1 className="text-2xl font-bold">Items ( {25} )</h1>
+        <div className="flex items-center gap-2 text-2xl font-bold">
+          <span>Items ({filteredFruits.length})</span>
+          {showFav && (
+            <span className="font-mono text-base text-accent">
+              -- Favourite
+            </span>
+          )}
+        </div>
         <div className="flex gap-3">
-          {filters.map((item, index) => (
-            <Tags text={item} setFilters={setFilters} key={item + index} />
+          {filterTags.map((item, index) => (
+            <Tags
+              text={item}
+              setFilterTags={setFilterTags}
+              key={item + index}
+            />
           ))}
         </div>
         <div className="flex flex-wrap gap-7">
