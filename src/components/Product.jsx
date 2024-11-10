@@ -88,6 +88,7 @@ export default function Product() {
                 return newArr;
               }
               newArr.push(fruit.id);
+              localStorage.setItem("favs", JSON.stringify(newArr));
               return newArr;
             });
           }}
@@ -122,6 +123,7 @@ export default function Product() {
                     for (let i in newCart)
                       if (newCart[i].fruitId == fruit.id)
                         newCart[i].count = qty - 1;
+                    localStorage.setItem("cart", JSON.stringify(newCart));
                     return newCart;
                   });
                 }
@@ -140,6 +142,7 @@ export default function Product() {
                     for (let i in newCart)
                       if (newCart[i].fruitId == fruit.id)
                         newCart[i].count = qty + 1;
+                    localStorage.setItem("cart", JSON.stringify(newCart));
                     return newCart;
                   });
                 }
@@ -167,10 +170,12 @@ export default function Product() {
                 const newCart = [...prev];
                 if (!isInCart(fruit.id)) {
                   newCart.push({ fruitId: fruit.id, count: qty });
+                  localStorage.setItem("cart", JSON.stringify(newCart));
                   return newCart;
                 }
                 for (let i in newCart)
                   if (newCart[i].fruitId == fruit.id) newCart.splice(i, 1);
+                localStorage.setItem("cart", JSON.stringify(newCart));
                 return newCart;
               });
             }}

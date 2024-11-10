@@ -21,6 +21,7 @@ export default function Cart() {
     setCart((prev) => {
       const newCart = [...prev];
       newCart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(newCart));
       return newCart;
     });
   }
@@ -79,9 +80,16 @@ export default function Cart() {
                         const newCart = [...prev];
                         for (let i in newCart)
                           if (newCart[i].fruitId == fruit.id) {
-                            if (newCart[i].count == 1) return newCart;
+                            if (newCart[i].count == 1) {
+                              localStorage.setItem(
+                                "cart",
+                                JSON.stringify(newCart),
+                              );
+                              return newCart;
+                            }
                             newCart[i].count -= 1;
                           }
+                        localStorage.setItem("cart", JSON.stringify(newCart));
                         return newCart;
                       });
                     }}
@@ -97,6 +105,7 @@ export default function Cart() {
                         for (let i in newCart)
                           if (newCart[i].fruitId == fruit.id)
                             newCart[i].count += 1;
+                        localStorage.setItem("cart", JSON.stringify(newCart));
                         return newCart;
                       });
                     }}
@@ -170,6 +179,7 @@ export default function Cart() {
               "Yay! You have bought the fruits! It will be delivered to you.",
             );
             setCart([]);
+            localStorage.setItem("cart", JSON.stringify([]));
           }}
         >
           <Icon path={mdiCheckAll} size={0.8} />

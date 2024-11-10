@@ -325,6 +325,7 @@ export default function Store({ searchText, showFav }) {
                         return newArr;
                       }
                       newArr.push(fruit.id);
+                      localStorage.setItem("favs", JSON.stringify(newArr));
                       return newArr;
                     });
                   }}
@@ -358,11 +359,13 @@ export default function Store({ searchText, showFav }) {
                         const newCart = [...prev];
                         if (!isInCart(fruit.id)) {
                           newCart.push({ fruitId: fruit.id, count: 1 });
+                          localStorage.setItem("cart", JSON.stringify(newCart));
                           return newCart;
                         }
                         for (let i in newCart)
                           if (newCart[i].fruitId == fruit.id)
                             newCart.splice(i, 1);
+                        localStorage.setItem("cart", JSON.stringify(newCart));
                         return newCart;
                       });
                     }}

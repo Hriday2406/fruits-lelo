@@ -21,6 +21,7 @@ export default function CartCard() {
     setCart((prev) => {
       const newCart = [...prev];
       newCart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(newCart));
       return newCart;
     });
   }
@@ -91,6 +92,7 @@ export default function CartCard() {
               "Yay! You have bought the fruits! It will be delivered to you.",
             );
             setCart([]);
+            localStorage.setItem("cart", JSON.stringify([]));
           }}
         >
           <Icon path={mdiCheckAll} size={0.8} />

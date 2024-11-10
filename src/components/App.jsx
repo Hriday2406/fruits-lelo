@@ -19,7 +19,7 @@ export const CartContext = createContext([
 export const FavContext = createContext([0, 2, 4, 7]);
 
 function App() {
-  const initialCart = [
+  let initialCart = [
     {
       fruitId: 1,
       count: 2,
@@ -29,9 +29,15 @@ function App() {
       count: 3,
     },
   ];
+  let initialFavs = [0, 2, 4, 7];
 
-  const [cart, setCart] = useState(initialCart);
-  const [favs, setFavs] = useState([0, 2, 4, 7]);
+  if (localStorage.getItem("cart") == null)
+    localStorage.setItem("cart", JSON.stringify(initialCart));
+  if (localStorage.getItem("favs") == null)
+    localStorage.setItem("favs", JSON.stringify(initialFavs));
+
+  const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")));
+  const [favs, setFavs] = useState(JSON.parse(localStorage.getItem("favs")));
   const [searchText, setSearchText] = useState("");
   const [showFav, setShowFav] = useState(false);
 
