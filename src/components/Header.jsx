@@ -60,6 +60,12 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
             onChange={(e) => {
               setSearchText(e.target.value);
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                navigate("/store");
+              }
+            }}
           />
           <Icon
             path={mdiWindowClose}
