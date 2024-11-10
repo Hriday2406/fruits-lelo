@@ -31,7 +31,7 @@ export default function CartCard() {
       <h2 className="border-b-[1px] border-gray pb-6 text-2xl font-bold">
         Shopping Cart
       </h2>
-      <div className="flex max-h-[362px] flex-col gap-[25px] overflow-y-auto py-9 pr-5">
+      <div className="scrollbar-thin scrollbar-webkit flex max-h-[362px] flex-col gap-[25px] overflow-y-auto py-9 pr-5">
         {cart.map((item, index) => {
           const fruit = FRUITS[item.fruitId];
 
