@@ -305,7 +305,8 @@ export default function Store({ searchText, showFav }) {
             />
           ))}
         </div>
-        <div className="flex flex-wrap gap-7">
+        {/* <div className="flex flex-wrap gap-7"> */}
+        <div className="grid w-full grid-cols-3 gap-7">
           {filteredFruits.map((fruit, index) => {
             return (
               <div
@@ -335,12 +336,14 @@ export default function Store({ searchText, showFav }) {
                   className="rounded-2xl"
                   key={fruit.name + index}
                 >
-                  <div className="px-[200px] pb-[150px] pt-[180px]">
-                    <img
-                      src={fruit.src}
-                      alt={fruit.name}
-                      className="size-[100px] transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84]"
-                    />
+                  <div className="flex items-center justify-center pb-[150px] pt-[180px]">
+                    <div className="size-[100px]">
+                      <img
+                        src={fruit.src}
+                        alt={fruit.name}
+                        className="size-full transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84]"
+                      />
+                    </div>
                   </div>
                 </Link>
                 <div className="flex w-full items-center justify-between px-10 pb-10">
