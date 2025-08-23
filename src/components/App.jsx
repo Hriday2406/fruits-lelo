@@ -5,6 +5,7 @@ import Store from "./Store";
 import Home from "./Home";
 import Product from "./Product";
 import Cart from "./Cart";
+import NotFound from "./NotFound";
 
 export const CartContext = createContext([
   {
@@ -59,6 +60,7 @@ function App() {
             />
             <Route path="/store/:slug" element={<Product />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </FavContext.Provider>
