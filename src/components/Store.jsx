@@ -20,6 +20,7 @@ import { CartContext, FavContext } from "./App";
 import { Link } from "react-router-dom";
 import { Flipped, Flipper, spring } from "react-flip-toolkit";
 import { isInCart } from "../utils/fruitUtils";
+import NotFound from "./NotFound";
 
 function Tags({ text, setFilterTags }) {
   if (text == "") return null;
@@ -49,18 +50,6 @@ function Tags({ text, setFilterTags }) {
   return (
     <div className="flex select-none items-center gap-1 rounded-full bg-accent px-3 py-1 font-mono text-xs font-black text-black">
       <span className="">{textToDisplay}</span>
-      {/* <Icon
-        path={mdiWindowClose}
-        size={0.6}
-        className="cursor-pointer transition-all hover:scale-150"
-        onClick={() => {
-          setFilterTags((prev) => {
-            const newFilters = [...prev];
-            newFilters.splice(newFilters.indexOf(text), 1);
-            return newFilters;
-          });
-        }}
-      /> */}
     </div>
   );
 }
@@ -232,7 +221,10 @@ export default function Store({ searchText, showFav }) {
   const [filteredFruits, setFilteredFruits] = useState(FRUITS);
   const { favs, setFavs } = useContext(FavContext);
   const { cart, setCart } = useContext(CartContext);
-  const fruitsFlipKey = `${filteredFruits.map((fruit) => fruit.id).join(",")}`;
+  const fruitsFlipKey =
+    filteredFruits.length === 0
+      ? "no-results"
+      : `${filteredFruits.map((fruit) => fruit.id).join(",")}`;
 
   function getFavFruits() {
     return FRUITS.filter((fruit) => favs.includes(fruit.id));
@@ -312,89 +304,120 @@ export default function Store({ searchText, showFav }) {
             />
           ))}
         </div>
+
         <Flipper
           flipKey={fruitsFlipKey}
           className="grid w-full grid-cols-3 gap-7"
         >
-          {filteredFruits.map((fruit, index) => {
-            return (
-              <Flipped
-                flipId={fruit.id}
-                key={fruit.name + index}
-                onExit={onExit}
-                stagger
-              >
-                <div className="group relative shrink-0 select-none rounded-2xl border-2 border-dashed border-dash">
-                  <Icon
-                    path={favs.includes(fruit.id) ? mdiHeart : mdiHeartOutline}
-                    size={1}
-                    className="absolute right-10 top-10 cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red]"
-                    color={favs.includes(fruit.id) ? "red" : "white"}
-                    onClick={() => {
-                      setFavs((prev) => {
-                        const newArr = [...prev];
-                        if (favs.includes(fruit.id)) {
-                          newArr.splice(favs.indexOf(fruit.id), 1);
-                          return newArr;
-                        }
-                        newArr.push(fruit.id);
-                        localStorage.setItem("favs", JSON.stringify(newArr));
-                        return newArr;
-                      });
-                    }}
-                  />
-                  <Link
-                    to={`/store/${fruit.slug}`}
-                    className="rounded-2xl"
-                    key={fruit.name + index}
-                  >
-                    <div className="flex items-center justify-center pb-[150px] pt-[180px]">
-                      <div className="size-[100px]">
-                        <img
-                          src={fruit.src}
-                          alt={fruit.name}
-                          className="size-full transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84]"
-                        />
-                      </div>
-                    </div>
-                  </Link>
-                  <div className="flex w-full items-center justify-between px-10 pb-10">
-                    <div className="flex flex-col justify-between">
-                      <h3 className="font-bold">{fruit.name}</h3>
-                      <span className="text-gray">{fruit.family} family</span>
-                      <span className="font-mono font-bold">
-                        ${fruit.price}
-                      </span>
-                    </div>
+          {filteredFruits.length === 0 ? (
+            <Flipped
+              flipId="no-results"
+              key="no-results"
+              onExit={onExit}
+              stagger
+            >
+              <div className="group relative flex shrink-0 select-none items-center justify-center rounded-2xl border-2 border-dashed border-dash p-10 text-center">
+                <div>
+                  <h3 className="text-xl font-bold">Kuch bhi nahi mila</h3>
+                  {searchText && (
+                    <p className="mt-2 text-gray">
+                      "{searchText}" ke liye koi result nahi mila.
+                    </p>
+                  )}
+                  <p className="mt-4 text-accent">
+                    Filters change karo ya search clear karo.
+                  </p>
+                </div>
+              </div>
+            </Flipped>
+          ) : (
+            filteredFruits.map((fruit, index) => {
+              return (
+                <Flipped
+                  flipId={fruit.id}
+                  key={fruit.name + index}
+                  onExit={onExit}
+                  stagger
+                >
+                  <div className="group relative shrink-0 select-none rounded-2xl border-2 border-dashed border-dash">
                     <Icon
-                      path={isInCart(cart, fruit.id) ? mdiCart : mdiCartOutline}
+                      path={
+                        favs.includes(fruit.id) ? mdiHeart : mdiHeartOutline
+                      }
                       size={1}
-                      className="cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_#ae9b84]"
-                      color="#ae9b84"
+                      className="absolute right-10 top-10 cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red]"
+                      color={favs.includes(fruit.id) ? "red" : "white"}
                       onClick={() => {
-                        setCart((prev) => {
-                          const newCart = [...prev];
-                          if (!isInCart(cart, fruit.id)) {
-                            newCart.push({ fruitId: fruit.id, count: 1 });
+                        setFavs((prev) => {
+                          const newArr = [...prev];
+                          if (favs.includes(fruit.id)) {
+                            newArr.splice(favs.indexOf(fruit.id), 1);
+                            return newArr;
+                          }
+                          newArr.push(fruit.id);
+                          localStorage.setItem("favs", JSON.stringify(newArr));
+                          return newArr;
+                        });
+                      }}
+                    />
+                    <Link
+                      to={`/store/${fruit.slug}`}
+                      className="rounded-2xl"
+                      key={fruit.name + index}
+                    >
+                      <div className="flex items-center justify-center pb-[150px] pt-[180px]">
+                        <div className="size-[100px]">
+                          <img
+                            src={fruit.src}
+                            alt={fruit.name}
+                            className="size-full transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84]"
+                          />
+                        </div>
+                      </div>
+                    </Link>
+                    <div className="flex w-full items-center justify-between px-10 pb-10">
+                      <div className="flex flex-col justify-between">
+                        <h3 className="font-bold">{fruit.name}</h3>
+                        <span className="text-gray">{fruit.family} family</span>
+                        <span className="font-mono font-bold">
+                          ${fruit.price}
+                        </span>
+                      </div>
+                      <Icon
+                        path={
+                          isInCart(cart, fruit.id) ? mdiCart : mdiCartOutline
+                        }
+                        size={1}
+                        className="cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_#ae9b84]"
+                        color="#ae9b84"
+                        onClick={() => {
+                          setCart((prev) => {
+                            const newCart = [...prev];
+                            if (!isInCart(cart, fruit.id)) {
+                              newCart.push({ fruitId: fruit.id, count: 1 });
+                              localStorage.setItem(
+                                "cart",
+                                JSON.stringify(newCart),
+                              );
+                              return newCart;
+                            }
+                            for (let i in newCart)
+                              if (newCart[i].fruitId == fruit.id)
+                                newCart.splice(i, 1);
                             localStorage.setItem(
                               "cart",
                               JSON.stringify(newCart),
                             );
                             return newCart;
-                          }
-                          for (let i in newCart)
-                            if (newCart[i].fruitId == fruit.id)
-                              newCart.splice(i, 1);
-                          localStorage.setItem("cart", JSON.stringify(newCart));
-                          return newCart;
-                        });
-                      }}
-                    />
+                          });
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              </Flipped>
-            );
-          })}
+                </Flipped>
+              );
+            })
+          )}
         </Flipper>
         {/* </Flipper> */}
       </div>
