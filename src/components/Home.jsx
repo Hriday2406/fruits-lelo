@@ -12,9 +12,9 @@ export default function Home() {
   const settings = {
     dots: true,
     infinite: true,
-    slidesToShow: 1,
+    slidesToShow: 3,
     slidesToScroll: 1,
-    speed: 2000,
+    speed: 500,
     autoplay: true,
     autoplaySpeed: 3000,
     swipeToSlide: true,
@@ -37,14 +37,6 @@ export default function Home() {
           slidesToShow: 2,
           slidesToScroll: 1,
           variableWidth: false,
-        }
-      },
-      {
-        breakpoint: 9999,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          variableWidth: true,
         }
       }
     ]
@@ -69,19 +61,19 @@ export default function Home() {
           Shop Now
         </button>
       </div>
-      <div className="w-full max-w-[300px] sm:max-w-[600px] lg:max-w-[810px]">
+      <div className="w-full max-w-[350px] sm:max-w-[700px] lg:max-w-[900px]">
         <Slider {...settings}>
           {FRUITS.map((fruit, index) => {
             if (index > 5) return;
             return (
               <Link to={`/store/${fruit.slug}`} key={fruit.name}>
-                <div className="group relative mx-2 rounded-2xl border-2 border-dashed border-dash p-8 sm:p-12 lg:p-[75px]">
+                <div className="group relative mx-1 rounded-2xl border-2 border-dashed border-dash p-6 sm:mx-2 sm:p-8 lg:p-12">
                   <img
                     src={fruit.src}
                     alt={fruit.name}
-                    className="size-12 transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84] sm:size-16 lg:size-[75px]"
+                    className="mx-auto size-16 transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84] sm:size-20 lg:size-24"
                   />
-                  <span className="absolute bottom-2 left-2 text-sm font-bold sm:bottom-4 sm:left-4 sm:text-base">
+                  <span className="absolute bottom-2 left-2 text-sm font-bold sm:bottom-3 sm:left-3 sm:text-base lg:bottom-4 lg:left-4">
                     {fruit.name}
                   </span>
                 </div>

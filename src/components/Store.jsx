@@ -213,6 +213,7 @@ function Aside({
               defaultValue={[]}
               className={`flex origin-top flex-col flex-nowrap gap-5 overflow-hidden transition-all duration-500 ${isVitaminOpen ? "h-48" : "h-0"}`}
               onChange={handleVitaminsChange}
+              value={vitamins}
             />
           </ConfigProvider>
         </div>
@@ -245,7 +246,7 @@ function Aside({
       )}
       
       {/* Desktop Sidebar */}
-      <div className="fixed left-0 top-0 hidden h-full w-72 select-none bg-bg p-10 pt-24 lg:block">
+      <div className="fixed left-0 top-0 hidden h-full w-72 select-none overflow-y-auto bg-bg p-10 pt-24 lg:block">
         <FilterContent />
       </div>
     </>
@@ -362,7 +363,7 @@ export default function Store({ searchText, showFav }) {
 
         <Flipper
           flipKey={fruitsFlipKey}
-          className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7"
+          className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-7"
         >
           {filteredFruits.length === 0 ? (
             <Flipped
