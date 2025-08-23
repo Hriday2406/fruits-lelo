@@ -1,6 +1,36 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-body: "Roboto", sans-serif;
+  --font-mono: "Roboto Mono", serif;
+  
+  --color-bg: #0f0f0f;
+  --color-secondary: #1f1f1f;
+  --color-accent: #ae9b84;
+  --color-dash: #262626;
+  --color-gray: #676665;
+  --color-red: #ff0000;
+}
+
+/* Custom utilities for scrollbar */
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #ae9b84 #0f0f0f;
+}
+
+@utility scrollbar-webkit {
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #0f0f0f;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #ae9b84;
+    border-radius: 100px;
+    border: 1px solid white;
+  }
+}
 
 body {
   background-color: #0f0f0f;
