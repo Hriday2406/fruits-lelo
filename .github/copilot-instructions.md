@@ -106,6 +106,8 @@ After making any changes, you MUST manually validate the application through the
 - **Always check `src/utils/constants.js`** after modifying product data or filter options
 - **Always check `src/components/App.jsx`** after making changes to routing or global state
 - **Always run linting and formatting** before committing: `npm run lint && npx prettier --write .`
+- **Also check `src/components/Store.jsx`, `src/components/NotFound.jsx`, and `src/utils/fruitUtils.js`** when changing UI, no-results behavior, or cart helpers (recent changes moved the store no-results into the grid Flipper and extracted some helpers).
+- Note: the Store no-results state now lives inside the Flipper grid (`src/components/Store.jsx`).
 
 ## Common Development Tasks
 

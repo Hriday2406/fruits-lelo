@@ -232,7 +232,7 @@ Add `vitest` config with jsdom, create `__tests__/` folder, and wire `npm test` 
 | --- | -------- | --------------------------------------------------- | ---------------------------------- | ------------- |
 | 1   | High     | Add not-found route + resilient product lookup      | Prevent runtime errors on bad URLs | Completed     |
 | 2   | High     | Centralize storage utils & validate JSON parse      | Stability & maintainability        | No change yet |
-| 3   | High     | Implement No Results message (Issue #3)             | UX clarity                         | Pending       |
+| 3   | High     | Implement No Results message (Issue #3)             | UX clarity                         | Completed     |
 | 4   | High     | Make layout responsive (Issue #6)                   | Mobile usability                   | Pending       |
 | 5   | Medium   | Add active nav highlight (Issue #4)                 | Orientation                        | Pending       |
 | 6   | Medium   | Extract reusable helpers (isInCart, getFruitBySlug) | DRY principle                      | Completed     |
@@ -249,6 +249,11 @@ Add `vitest` config with jsdom, create `__tests__/` folder, and wire `npm test` 
 - Improved code formatting and maintainability in utility and component files.
 - NotFound page layout is now more responsive and visually consistent.
 - Contributor instructions are more comprehensive.
+- Store: moved no-results into the `Flipper` grid so empty-state animates consistently with product cards. (No Results message implemented in the Store grid)
+- `NotFound.jsx` refactored to be reusable for route-level 404 while the Store uses a compact in-grid message (Hinglish copy).
+- Extracted `isInCart` and other helpers into `src/utils/fruitUtils.js` and tightened input validation to avoid runtime errors from malformed localStorage data.
+- Opened PR #14 to merge `agent/dependency-update` into `ai` with lockfile and UI changes.
+- Created Issue #12 (add X to remove filter tags) and Issue #13 (fix Buy Now flow on Product page).
 
 Continue to address pending items for production readiness and maintainability.
 
