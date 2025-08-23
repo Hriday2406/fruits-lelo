@@ -59,15 +59,15 @@ export default function Product() {
 
   return (
     <div className="relative flex flex-col items-start gap-6 p-4 pt-16 sm:p-8 sm:pt-20 lg:flex-row lg:gap-10 lg:p-20 lg:pt-24">
-      <button
-        className="absolute left-4 top-4 z-10 cursor-pointer rounded-full bg-secondary p-2 text-accent transition-all hover:scale-125 hover:bg-accent hover:text-black hover:drop-shadow-[0_0_10px_#AE9B84] sm:left-8 sm:top-8 lg:left-10 lg:top-10"
+      <Icon
+        path={mdiKeyboardBackspace}
+        size={1.5}
+        className="absolute left-4 top-4 z-10 cursor-pointer text-accent transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84] sm:left-8 sm:top-8 lg:left-10 lg:top-10"
         onClick={() => {
           navigate(-1);
         }}
         aria-label="Go back"
-      >
-        <Icon path={mdiKeyboardBackspace} size={1.5} />
-      </button>
+      />
       <div className="group relative w-full shrink-0 select-none rounded-2xl border-2 border-dashed border-dash p-12 sm:p-20 lg:w-auto lg:p-[180px]">
         <img
           src={fruit.src}

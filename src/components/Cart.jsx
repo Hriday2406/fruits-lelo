@@ -34,8 +34,8 @@ export default function Cart() {
   }, [cart]);
 
   return (
-    <div className="relative flex flex-col gap-6 px-4 py-16 lg:flex-row lg:items-start lg:justify-between lg:px-14 lg:py-32">
-      <div className="lg:absolute lg:left-10 lg:top-5">
+    <div className="relative flex flex-col gap-6 px-4 py-8 lg:flex-row lg:items-start lg:justify-between lg:px-14 lg:py-32">
+      <div className="mb-4 lg:absolute lg:left-10 lg:top-5 lg:mb-0">
         <Icon
           path={mdiKeyboardBackspace}
           size={1.5}
@@ -44,7 +44,7 @@ export default function Cart() {
             navigate(-1);
           }}
         />
-        <h1 className="pl-4 pt-3 text-xl font-bold sm:text-2xl">Shopping Cart</h1>
+        <h1 className="mt-2 text-xl font-bold sm:text-2xl">Shopping Cart</h1>
       </div>
       <div className="flex w-full flex-col gap-4 lg:w-2/5 lg:gap-[25px]">
         {cart.map((item, index) => {
