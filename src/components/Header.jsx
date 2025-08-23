@@ -8,7 +8,7 @@ import {
 } from "@mdi/js";
 import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Badge, ConfigProvider, Popover } from "antd";
 import CartCard from "./cartCard";
 import { CartContext, FavContext } from "./App";
@@ -16,29 +16,36 @@ import { CartContext, FavContext } from "./App";
 export default function Header({ setSearchText, showFav, setShowFav }) {
   const searchRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { favs } = useContext(FavContext);
   const { cart } = useContext(CartContext);
 
+  const navClass = (path) => {
+    const isActive =
+      path === "/"
+        ? location.pathname === "/"
+        : location.pathname.startsWith(path);
+    return `cursor-pointer px-3 py-2 transition-all duration-500 ease-in-out ${
+      isActive
+        ? "text-accent drop-shadow-[0_0_50px_#AE9B84] filter brightness-125 font-bold text-shadow-[0_0_20px_rgba(174,155,132,0.8)]"
+        : "text-white hover:text-accent hover:drop-shadow-[0_0_30px_#AE9B84] hover:brightness-110"
+    }`;
+  };
+
   return (
     <header className="flex justify-between px-10 py-6">
-      <div className="flex select-none items-center gap-6">
+      <div className="flex items-center gap-6 select-none">
         <Link
           to={"/"}
-          className="cursor-pointer text-3xl font-bold text-accent transition-all hover:drop-shadow-[0_0_10px]"
+          className="text-accent cursor-pointer text-3xl font-bold transition-all hover:drop-shadow-[0_0_10px]"
         >
           Fruits Lelo.
         </Link>
         <nav className="flex gap-3">
-          <Link
-            className="cursor-pointer border-b-2 border-bg px-1 transition-all hover:border-b-2 hover:border-accent hover:drop-shadow-[0_0_20px_#AE9B84]"
-            to={"/"}
-          >
+          <Link className={navClass("/")} to={"/"}>
             Home
           </Link>
-          <Link
-            className="cursor-pointer border-b-2 border-bg px-1 transition-all hover:border-b-2 hover:border-accent hover:drop-shadow-[0_0_20px_#AE9B84]"
-            to={"/store"}
-          >
+          <Link className={navClass("/store")} to={"/store"}>
             Store
           </Link>
         </nav>
@@ -46,7 +53,7 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
       <div className="flex items-center gap-11">
         <form
           action=""
-          className="flex select-none items-center rounded-3xl bg-secondary p-3"
+          className="bg-secondary flex items-center rounded-3xl p-3 select-none"
           onClick={() => {
             searchRef.current.focus();
           }}
@@ -54,7 +61,7 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
           <Icon path={mdiMagnify} size={1} color="#ae9b84" />
           <input
             type="text"
-            className="border-none bg-secondary px-3 caret-accent outline-none placeholder:text-white"
+            className="bg-secondary caret-accent border-none px-3 outline-none placeholder:text-white"
             ref={searchRef}
             placeholder="Search"
             onChange={(e) => {
