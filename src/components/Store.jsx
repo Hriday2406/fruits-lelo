@@ -2,11 +2,12 @@ import Icon from "@mdi/react";
 import {
   mdiChevronDown,
   mdiChevronUp,
-  // mdiWindowClose,
+  mdiWindowClose,
   mdiHeart,
   mdiHeartOutline,
   mdiCartOutline,
   mdiCart,
+  mdiFilterVariant,
 } from "@mdi/js";
 import { Checkbox, ConfigProvider } from "antd";
 import { useContext, useEffect, useState } from "react";
@@ -87,6 +88,8 @@ function Aside({
   setFamily,
   vitamins,
   setVitamins,
+  isFilterOpen,
+  setIsFilterOpen,
 }) {
   const [isColorOpen, setIsColorOpen] = useState(true);
   const [isFamilyOpen, setIsFamilyOpen] = useState(true);
@@ -103,11 +106,12 @@ function Aside({
     setVitamins(checkedValues);
   }
 
-  return (
-    <div className="w-72 shrink-0 select-none p-10">
-      <div className="">
+  const FilterContent = () => (
+    <div className="space-y-6">
+      {/* Color Filter */}
+      <div>
         <div className="flex items-center justify-between bg-bg">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-xl font-bold lg:text-2xl">
             Color {colors.length > 0 ? `(${colors.length})` : ""}
           </h1>
           <Icon
@@ -121,10 +125,10 @@ function Aside({
           />
         </div>
         <div
-          className={`m-6 origin-top overflow-hidden transition-all duration-500 ${isColorOpen ? "h-72" : "h-0"}`}
+          className={`mt-4 origin-top overflow-hidden transition-all duration-500 lg:m-6 ${isColorOpen ? "h-72" : "h-0"}`}
         >
           <Checkbox.Group
-            className="flex gap-5"
+            className="flex flex-wrap gap-3 lg:gap-5"
             onChange={handleColorChange}
             value={colors}
           >
@@ -134,9 +138,11 @@ function Aside({
           </Checkbox.Group>
         </div>
       </div>
-      <div className="">
+
+      {/* Family Filter */}
+      <div>
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-xl font-bold lg:text-2xl">
             Family {family != "" ? "(1)" : ""}
           </h1>
           <Icon
@@ -149,7 +155,7 @@ function Aside({
             }}
           />
         </div>
-        <div className="m-6">
+        <div className="mt-4 lg:m-6">
           <ConfigProvider
             theme={{
               token: {
@@ -172,9 +178,11 @@ function Aside({
           </ConfigProvider>
         </div>
       </div>
-      <div className="">
+
+      {/* Vitamins Filter */}
+      <div>
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-xl font-bold lg:text-2xl">
             Vitamins {vitamins.length > 0 ? `(${vitamins.length})` : ""}
           </h1>
           <Icon
@@ -187,7 +195,7 @@ function Aside({
             }}
           />
         </div>
-        <div className="m-6 flex flex-col gap-5">
+        <div className="mt-4 flex flex-col gap-5 lg:m-6">
           <ConfigProvider
             theme={{
               token: {
@@ -211,6 +219,37 @@ function Aside({
       </div>
     </div>
   );
+
+  return (
+    <>
+      {/* Mobile Filter Overlay */}
+      {isFilterOpen && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 lg:hidden">
+          <div className="absolute right-0 top-0 h-full w-80 max-w-[90vw] bg-bg shadow-lg">
+            <div className="flex h-full flex-col">
+              <div className="flex items-center justify-between border-b border-secondary p-6">
+                <h2 className="text-xl font-bold">Filters</h2>
+                <button
+                  onClick={() => setIsFilterOpen(false)}
+                  className="p-2 transition-all hover:scale-125"
+                >
+                  <Icon path={mdiWindowClose} size={1} color="#ae9b84" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-y-auto p-6">
+                <FilterContent />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Desktop Sidebar */}
+      <div className="fixed left-0 top-0 hidden h-full w-72 select-none bg-bg p-10 pt-24 lg:block">
+        <FilterContent />
+      </div>
+    </>
+  );
 }
 
 export default function Store({ searchText, showFav }) {
@@ -219,6 +258,7 @@ export default function Store({ searchText, showFav }) {
   const [vitamins, setVitamins] = useState([]);
   const [filterTags, setFilterTags] = useState([]);
   const [filteredFruits, setFilteredFruits] = useState(FRUITS);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const { favs, setFavs } = useContext(FavContext);
   const { cart, setCart } = useContext(CartContext);
   const fruitsFlipKey =
@@ -275,27 +315,42 @@ export default function Store({ searchText, showFav }) {
   }
 
   return (
-    <section className="flex overflow-hidden">
+    <section className="relative">
       <Aside
-        filterTags={filterTags}
-        setFilterTags={setFilterTags}
         colors={colors}
         setColors={setColors}
         family={family}
         setFamily={setFamily}
         vitamins={vitamins}
         setVitamins={setVitamins}
+        isFilterOpen={isFilterOpen}
+        setIsFilterOpen={setIsFilterOpen}
       />
-      <div className="flex w-full flex-col items-start gap-5 pr-10 pt-10">
-        <div className="flex items-center gap-2 text-2xl font-bold">
-          <span>Items ({filteredFruits.length})</span>
-          {showFav && (
-            <span className="font-mono text-base text-accent">
-              -- Favourite
-            </span>
-          )}
+      
+      <div className="flex w-full flex-col items-start gap-4 p-4 lg:pl-80 lg:pr-10 lg:pt-10">
+        {/* Mobile Filter Button and Header */}
+        <div className="flex w-full items-center justify-between">
+          <div className="flex items-center gap-2 text-xl font-bold sm:text-2xl">
+            <span>Items ({filteredFruits.length})</span>
+            {showFav && (
+              <span className="font-mono text-sm text-accent sm:text-base">
+                -- Favourite
+              </span>
+            )}
+          </div>
+          
+          {/* Mobile Filter Button */}
+          <button
+            className="flex items-center gap-2 rounded-lg bg-secondary px-3 py-2 font-medium transition-all hover:bg-accent hover:text-black lg:hidden"
+            onClick={() => setIsFilterOpen(true)}
+          >
+            <Icon path={mdiFilterVariant} size={0.8} />
+            <span>Filter</span>
+          </button>
         </div>
-        <div className="flex gap-3">
+        
+        {/* Filter Tags */}
+        <div className="flex flex-wrap gap-2">
           {filterTags.map((item, index) => (
             <Tags
               text={item}
@@ -307,7 +362,7 @@ export default function Store({ searchText, showFav }) {
 
         <Flipper
           flipKey={fruitsFlipKey}
-          className="grid w-full grid-cols-3 gap-7"
+          className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7"
         >
           {filteredFruits.length === 0 ? (
             <Flipped

@@ -12,24 +12,50 @@ export default function Home() {
   const settings = {
     dots: true,
     infinite: true,
-    slidesToShow: 3,
+    slidesToShow: 1,
     slidesToScroll: 1,
     speed: 2000,
     autoplay: true,
     autoplaySpeed: 3000,
     swipeToSlide: true,
     pauseOnHover: true,
-    variableWidth: true,
+    variableWidth: false,
     nextArrow: <SliderArrows />,
     prevArrow: <SliderArrows />,
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          variableWidth: false,
+        }
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          variableWidth: false,
+        }
+      },
+      {
+        breakpoint: 9999,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          variableWidth: true,
+        }
+      }
+    ]
   };
   const navigate = useNavigate();
 
   return (
-    <main className="flex h-full flex-col items-center justify-center gap-20 py-20">
-      <div className="flex flex-col items-center gap-12 text-center">
-        <h1 className="text-4xl font-bold">Welcome to Fruits Lelo.</h1>
-        <p className="w-3/5 text-xl">
+    <main className="flex h-full flex-col items-center justify-center gap-12 px-4 py-12 sm:gap-20 sm:py-20">
+      <div className="flex flex-col items-center gap-8 text-center sm:gap-12">
+        <h1 className="text-2xl font-bold sm:text-3xl lg:text-4xl">Welcome to Fruits Lelo.</h1>
+        <p className="w-4/5 text-base sm:w-3/5 sm:text-lg lg:text-xl">
           Hamari fresh fruits ki selection ko discover karo, jo flavor aur
           vitality se bharpur hai. Seedha farm se aapke table tak deliver kiya
           jata hai.
@@ -43,19 +69,19 @@ export default function Home() {
           Shop Now
         </button>
       </div>
-      <div className="w-[810px]">
+      <div className="w-full max-w-[300px] sm:max-w-[600px] lg:max-w-[810px]">
         <Slider {...settings}>
           {FRUITS.map((fruit, index) => {
             if (index > 5) return;
             return (
               <Link to={`/store/${fruit.slug}`} key={fruit.name}>
-                <div className="group relative rounded-2xl border-2 border-dashed border-dash p-[75px]">
+                <div className="group relative mx-2 rounded-2xl border-2 border-dashed border-dash p-8 sm:p-12 lg:p-[75px]">
                   <img
                     src={fruit.src}
                     alt={fruit.name}
-                    className="size-[75px] transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84]"
+                    className="size-12 transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84] sm:size-16 lg:size-[75px]"
                   />
-                  <span className="absolute bottom-4 left-4 font-bold">
+                  <span className="absolute bottom-2 left-2 text-sm font-bold sm:bottom-4 sm:left-4 sm:text-base">
                     {fruit.name}
                   </span>
                 </div>
