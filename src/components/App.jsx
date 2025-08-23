@@ -45,7 +45,7 @@ function App() {
   return (
     <CartContext.Provider value={{ cart, setCart }}>
       <FavContext.Provider value={{ favs, setFavs }}>
-        <div className="min-h-screen w-full bg-bg font-body text-white scrollbar-thin scrollbar-webkit">
+        <div className="bg-bg font-body scrollbar-thin scrollbar-webkit min-h-screen w-full text-white">
           <Header
             setSearchText={setSearchText}
             showFav={showFav}
