@@ -22,7 +22,7 @@ import { Flipped, Flipper, spring } from "react-flip-toolkit";
 import { isInCart } from "../utils/fruitUtils";
 import NotFound from "./NotFound";
 
-function Tags({ text, setFilterTags }) {
+function Tags({ text, onRemove }) {
   if (text == "") return null;
   let textToDisplay = '"' + text + '"';
   if (text == "C" || text == "A" || text == "K" || text == "E" || text == "B6")
@@ -48,7 +48,14 @@ function Tags({ text, setFilterTags }) {
   )
     textToDisplay = text;
   return (
-    <div className="flex select-none items-center gap-1 rounded-full bg-accent px-3 py-1 font-mono text-xs font-black text-black">
+    <div className="bg-accent flex items-center gap-1 rounded-full px-2 py-1 font-mono text-xs font-black text-black select-none">
+      <button
+        aria-label={`Remove filter ${text}`}
+        className="-ml-[3px] flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-black/25 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:scale-110 hover:bg-black/50 hover:shadow-md active:scale-95"
+        onClick={() => onRemove(text)}
+      >
+        X
+      </button>
       <span className="">{textToDisplay}</span>
     </div>
   );
@@ -104,9 +111,9 @@ function Aside({
   }
 
   return (
-    <div className="w-72 shrink-0 select-none p-10">
+    <div className="w-72 shrink-0 p-10 select-none">
       <div className="">
-        <div className="flex items-center justify-between bg-bg">
+        <div className="bg-bg flex items-center justify-between">
           <h1 className="text-2xl font-bold">
             Color {colors.length > 0 ? `(${colors.length})` : ""}
           </h1>
@@ -202,7 +209,7 @@ function Aside({
           >
             <Checkbox.Group
               options={VITAMINSOPTIONS}
-              defaultValue={[]}
+              value={vitamins}
               className={`flex origin-top flex-col flex-nowrap gap-5 overflow-hidden transition-all duration-500 ${isVitaminOpen ? "h-48" : "h-0"}`}
               onChange={handleVitaminsChange}
             />
@@ -265,6 +272,32 @@ export default function Store({ searchText, showFav }) {
     setFilteredFruits(tempArr);
   }, [colors, family, vitamins, searchText, showFav]);
 
+  function removeFilterTag(tag) {
+    // If tag matches a color, remove from colors
+    if (colors.includes(tag)) {
+      setColors((prev) => prev.filter((c) => c !== tag));
+      return;
+    }
+    // If tag matches family
+    if (family === tag) {
+      setFamily("");
+      return;
+    }
+    // If tag matches a vitamin
+    if (vitamins.includes(tag)) {
+      setVitamins((prev) => prev.filter((v) => v !== tag));
+      return;
+    }
+    // Otherwise assume it's the search text
+    if (tag === searchText) {
+      // clear search by emitting an event or using global setter — try local setter via window (fallback)
+      // Prefer to update via location: dispatch a custom event so parent can clear search.
+      const ev = new CustomEvent("clearSearch");
+      window.dispatchEvent(ev);
+      return;
+    }
+  }
+
   function onExit(element, index, removeElement) {
     spring({
       onUpdate: (value) => {
@@ -286,28 +319,24 @@ export default function Store({ searchText, showFav }) {
         vitamins={vitamins}
         setVitamins={setVitamins}
       />
-      <div className="flex w-full flex-col items-start gap-5 pr-10 pt-10">
+      <div className="flex w-full flex-col items-start gap-5 pt-10 pr-10">
         <div className="flex items-center gap-2 text-2xl font-bold">
           <span>Items ({filteredFruits.length})</span>
           {showFav && (
-            <span className="font-mono text-base text-accent">
+            <span className="text-accent font-mono text-base">
               -- Favourite
             </span>
           )}
         </div>
         <div className="flex gap-3">
           {filterTags.map((item, index) => (
-            <Tags
-              text={item}
-              setFilterTags={setFilterTags}
-              key={item + index}
-            />
+            <Tags text={item} onRemove={removeFilterTag} key={item + index} />
           ))}
         </div>
 
         <Flipper
           flipKey={fruitsFlipKey}
-          className="grid w-full grid-cols-3 gap-7"
+          className="grid w-full grid-cols-3 gap-7 pb-20"
         >
           {filteredFruits.length === 0 ? (
             <Flipped
@@ -316,15 +345,15 @@ export default function Store({ searchText, showFav }) {
               onExit={onExit}
               stagger
             >
-              <div className="group relative flex shrink-0 select-none items-center justify-center rounded-2xl border-2 border-dashed border-dash p-10 text-center">
+              <div className="group border-dash relative flex shrink-0 items-center justify-center rounded-2xl border-2 border-dashed p-10 text-center select-none">
                 <div>
                   <h3 className="text-xl font-bold">Kuch bhi nahi mila</h3>
                   {searchText && (
-                    <p className="mt-2 text-gray">
+                    <p className="text-gray mt-2">
                       "{searchText}" ke liye koi result nahi mila.
                     </p>
                   )}
-                  <p className="mt-4 text-accent">
+                  <p className="text-accent mt-4">
                     Filters change karo ya search clear karo.
                   </p>
                 </div>
@@ -339,13 +368,13 @@ export default function Store({ searchText, showFav }) {
                   onExit={onExit}
                   stagger
                 >
-                  <div className="group relative shrink-0 select-none rounded-2xl border-2 border-dashed border-dash">
+                  <div className="group border-dash relative shrink-0 rounded-2xl border-2 border-dashed select-none">
                     <Icon
                       path={
                         favs.includes(fruit.id) ? mdiHeart : mdiHeartOutline
                       }
                       size={1}
-                      className="absolute right-10 top-10 cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red]"
+                      className="absolute top-10 right-10 cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red]"
                       color={favs.includes(fruit.id) ? "red" : "white"}
                       onClick={() => {
                         setFavs((prev) => {
@@ -365,7 +394,7 @@ export default function Store({ searchText, showFav }) {
                       className="rounded-2xl"
                       key={fruit.name + index}
                     >
-                      <div className="flex items-center justify-center pb-[150px] pt-[180px]">
+                      <div className="flex items-center justify-center pt-[180px] pb-[150px]">
                         <div className="size-[100px]">
                           <img
                             src={fruit.src}

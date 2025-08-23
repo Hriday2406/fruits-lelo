@@ -198,3 +198,46 @@ The codebase currently has 28 linting errors/warnings:
 - Cart operations use localStorage which is synchronous
 
 Remember: **ALWAYS** test the complete user journey after making any changes to ensure the e-commerce functionality remains intact.
+
+## MCP & Playwright integration
+
+When building or maintaining this project, it's helpful to take advantage of the available MCP (Model/Context/Code Platform) tools and Playwright for automated browser testing. The guidance below is intended for both human developers and automated agents (Copilot-style coding agents) that may operate on this repository.
+
+When to use these tools
+
+- Use Playwright MCP (or a local Playwright setup) for end-to-end browser tests that exercise the full user journey (homepage -> store -> product -> cart -> checkout).
+- Use Context7 MCP to fetch authoritative library/docs (for example, React Router, Playwright or other framework docs) before implementing larger or unfamiliar changes.
+- Use GitHub MCP for automation tasks that interact with issues, pull requests, and repository metadata (creating issues for phased work, opening PRs, requesting reviews).
+
+Recommended quick commands (developer machine)
+
+```bash
+# install project deps once
+npm install
+
+# optional: install Playwright browsers (if using Playwright locally)
+npx playwright install --with-deps
+
+# run dev server
+npm run dev
+
+# run Playwright tests (if Playwright tests are added)
+npx playwright test
+```
+
+CI / Workflow suggestions
+
+- Add a workflow step to run lint and unit tests as a gate: `npm run lint` and your test runner.
+- Add an optional Playwright job that runs only on pull requests or on merges to `main` to validate critical user flows. Configure Playwright to run headlessly and with a short retry policy for flakiness.
+- Consider a documentation step that uses Context7 MCP to pull the latest docs for a dependency before a large refactor (this is optional but useful when upgrading libraries).
+
+How agents should use Context7 MCP and GitHub MCP
+
+- Resolve the Context7-compatible library ID before fetching docs (for example, to fetch Playwright docs or Next.js docs). Use the docs to confirm recommended APIs or migration steps.
+- Use GitHub MCP to create small, focused issues for each phase of a larger change (for example: responsive Phase 1: header and nav; Phase 2: store grid; Phase 3: product pages). Link the Context7 docs or Playwright test plan in the issue body.
+- When adding Playwright tests, create a dedicated `tests/e2e` folder and a minimal `playwright.config.ts` or `playwright.config.js` and include a sample smoke test that covers the happy path.
+
+Notes and constraints
+
+- These instructions do not automatically install new packages or change CI; human review is required before adding Playwright or MCP API credentials to workflows.
+- If Playwright tests are large or slow, gate them behind an "e2e" workflow that runs on a schedule or only for release branches to avoid slowing down everyday PR checks.

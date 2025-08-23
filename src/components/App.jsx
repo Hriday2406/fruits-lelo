@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { Route, Routes } from "react-router";
 import Header from "./Header";
 import Store from "./Store";
@@ -42,6 +42,12 @@ function App() {
   const [searchText, setSearchText] = useState("");
   const [showFav, setShowFav] = useState(false);
 
+  useEffect(() => {
+    const handler = () => setSearchText("");
+    window.addEventListener("clearSearch", handler);
+    return () => window.removeEventListener("clearSearch", handler);
+  }, []);
+
   return (
     <CartContext.Provider value={{ cart, setCart }}>
       <FavContext.Provider value={{ favs, setFavs }}>
@@ -56,7 +62,13 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route
               path="/store"
-              element={<Store searchText={searchText} showFav={showFav} />}
+              element={
+                <Store
+                  searchText={searchText}
+                  setSearchText={setSearchText}
+                  showFav={showFav}
+                />
+              }
             />
             <Route path="/store/:slug" element={<Product />} />
             <Route path="/cart" element={<Cart />} />
