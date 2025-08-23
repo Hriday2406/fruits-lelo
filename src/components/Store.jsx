@@ -270,7 +270,7 @@ export default function Store({ searchText, showFav }) {
       });
     }
     setFilteredFruits(tempArr);
-  }, [colors, family, vitamins, searchText, showFav]);
+  }, [colors, family, vitamins, searchText, showFav, favs]);
 
   function removeFilterTag(tag) {
     // If tag matches a color, remove from colors
@@ -381,9 +381,9 @@ export default function Store({ searchText, showFav }) {
                           const newArr = [...prev];
                           if (favs.includes(fruit.id)) {
                             newArr.splice(favs.indexOf(fruit.id), 1);
-                            return newArr;
+                          } else {
+                            newArr.push(fruit.id);
                           }
-                          newArr.push(fruit.id);
                           localStorage.setItem("favs", JSON.stringify(newArr));
                           return newArr;
                         });
