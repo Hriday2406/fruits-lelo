@@ -1,6 +1,6 @@
 # Fruits Lelo Project Analysis
 
-Date: 2025-08-23
+Date: 2025-08-24
 Repository: `fruits-lelo`
 
 ---
@@ -252,7 +252,7 @@ Add `vitest` config with jsdom, create `__tests__/` folder, and wire `npm test` 
 - Store: moved no-results into the `Flipper` grid so empty-state animates consistently with product cards. (No Results message implemented in the Store grid)
 - `NotFound.jsx` refactored to be reusable for route-level 404 while the Store uses a compact in-grid message (Hinglish copy).
 - Extracted `isInCart` and other helpers into `src/utils/fruitUtils.js` and tightened input validation to avoid runtime errors from malformed localStorage data.
-- Opened PR #14 to merge `agent/dependency-update` into `ai` with lockfile and UI changes.
+- PR #14 (agent/dependency-update -> ai) merged on 2025-08-24; lockfile and UI changes are now in the `ai` branch.
 - Created Issue #12 (add X to remove filter tags) and Issue #13 (fix Buy Now flow on Product page).
 
 Continue to address pending items for production readiness and maintainability.
