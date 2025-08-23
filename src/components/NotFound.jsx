@@ -4,13 +4,13 @@ import { mdiKeyboardBackspace, mdiMagnify } from "@mdi/js";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-8 p-20 text-center">
+    <div className="flex h-full flex-col items-center justify-center gap-8 p-20 text-center">
       <div className="flex flex-col items-center gap-4">
         <h1 className="text-6xl font-bold text-accent">404</h1>
-        <h2 className="text-2xl font-bold">Fruit Not Found</h2>
+        <h2 className="text-2xl font-bold">Fruit Nahi Mila</h2>
         <p className="text-gray-400 max-w-md">
-          The fruit you&apos;re looking for doesn&apos;t exist in our
-          collection. It might have been removed or the URL is incorrect.
+          Jo fruit aap dhoondh rahe ho woh humari collection mein nahi hai.
+          Shayad usse hata diya gaya hai ya URL galat hai.
         </p>
       </div>
 
@@ -20,7 +20,7 @@ export default function NotFound() {
           className="flex items-center gap-3 rounded-xl bg-accent px-6 py-3 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]"
         >
           <Icon path={mdiMagnify} size={1} />
-          Browse All Fruits
+          Sabhi Fruits Dekhein
         </Link>
 
         <Link
@@ -28,7 +28,7 @@ export default function NotFound() {
           className="flex items-center gap-3 rounded-xl bg-secondary px-6 py-3 font-mono font-bold text-accent transition-all duration-500 hover:bg-accent hover:text-black hover:shadow-[0_0_10px] hover:shadow-accent"
         >
           <Icon path={mdiKeyboardBackspace} size={1} />
-          Go Home
+          Main page par wapas jayein
         </Link>
       </div>
     </div>

@@ -228,21 +228,21 @@ Add `vitest` config with jsdom, create `__tests__/` folder, and wire `npm test` 
 
 ## 15. Suggested Refactors & Improvements (Prioritized Roadmap)
 
-| #   | Priority | Task                                                | Rationale                          | Status/Notes                                     |
-| --- | -------- | --------------------------------------------------- | ---------------------------------- | ------------------------------------------------ |
-| 1   | High     | Add not-found route + resilient product lookup      | Prevent runtime errors on bad URLs | NotFound.jsx improved                            |
-| 2   | High     | Centralize storage utils & validate JSON parse      | Stability & maintainability        | No change yet                                    |
-| 3   | High     | Implement No Results message (Issue #3)             | UX clarity                         | Pending                                          |
-| 4   | High     | Make layout responsive (Issue #6)                   | Mobile usability                   | Pending                                          |
-| 5   | Medium   | Add active nav highlight (Issue #4)                 | Orientation                        | Pending                                          |
-| 6   | Medium   | Extract reusable helpers (isInCart, getFruitBySlug) | DRY principle                      | Product.jsx/fruitUtils.js refactored for clarity |
-| 7   | Medium   | Convert price to number                             | Data correctness                   | Pending                                          |
-| 8   | Medium   | Add lazy-loading to images                          | Performance                        | Pending                                          |
-| 9   | Medium   | Replace alert() with AntD message/notification      | UI polish                          | Pending                                          |
-| 10  | Medium   | Add accessibility attributes & roles                | Inclusivity                        | Pending                                          |
-| 11  | Low      | Introduce Vitest + RTL tests                        | Quality baseline                   | Pending                                          |
-| 12  | Low      | Add i18n scaffolding                                | Future scalability                 | Pending                                          |
-| 13  | Low      | Consider removing heavy deps if not critical        | Bundle optimization                | Pending                                          |
+| #   | Priority | Task                                                | Rationale                          | Status/Notes  |
+| --- | -------- | --------------------------------------------------- | ---------------------------------- | ------------- |
+| 1   | High     | Add not-found route + resilient product lookup      | Prevent runtime errors on bad URLs | Completed     |
+| 2   | High     | Centralize storage utils & validate JSON parse      | Stability & maintainability        | No change yet |
+| 3   | High     | Implement No Results message (Issue #3)             | UX clarity                         | Pending       |
+| 4   | High     | Make layout responsive (Issue #6)                   | Mobile usability                   | Pending       |
+| 5   | Medium   | Add active nav highlight (Issue #4)                 | Orientation                        | Pending       |
+| 6   | Medium   | Extract reusable helpers (isInCart, getFruitBySlug) | DRY principle                      | Completed     |
+| 7   | Medium   | Convert price to number                             | Data correctness                   | Pending       |
+| 8   | Medium   | Add lazy-loading to images                          | Performance                        | Pending       |
+| 9   | Medium   | Replace alert() with AntD message/notification      | UI polish                          | Pending       |
+| 10  | Medium   | Add accessibility attributes & roles                | Inclusivity                        | Pending       |
+| 11  | Low      | Introduce Vitest + RTL tests                        | Quality baseline                   | Pending       |
+| 12  | Low      | Add i18n scaffolding                                | Future scalability                 | Pending       |
+| 13  | Low      | Consider removing heavy deps if not critical        | Bundle optimization                | Pending       |
 
 **Recent changes:**
 

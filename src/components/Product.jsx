@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router";
-import { getFruitBySlug } from "../utils/fruitUtils";
+import { getFruitBySlug, isInCart } from "../utils/fruitUtils";
 import Icon from "@mdi/react";
 import {
   mdiCubeOutline,
@@ -37,14 +37,6 @@ export default function Product() {
   const [qty, setQty] = useState(1);
   const [fav, setFav] = useState(false);
 
-  const isInCart = useCallback(
-    (id) => {
-      for (let i in cart) if (cart[i].fruitId == id) return true;
-      return false;
-    },
-    [cart],
-  );
-
   const getQty = useCallback(
     (id) => {
       for (let i in cart) if (cart[i].fruitId == id) return cart[i].count;
@@ -56,9 +48,9 @@ export default function Product() {
   let fruit = getFruitBySlug(slug);
 
   useEffect(() => {
-    if (fruit && isInCart(fruit.id)) setQty(getQty(fruit.id));
+    if (fruit && isInCart(fruit.id, cart)) setQty(getQty(fruit.id));
     if (fruit && favs.includes(fruit.id)) setFav(true);
-  }, [fruit, favs, isInCart, getQty]);
+  }, [fruit, favs, cart, getQty]);
 
   // If fruit not found, show NotFound component
   if (!fruit) {
@@ -125,7 +117,7 @@ export default function Product() {
               onClick={() => {
                 if (qty == 1) return;
                 setQty(qty - 1);
-                if (isInCart(fruit.id)) {
+                if (isInCart(fruit.id, cart)) {
                   setCart((prev) => {
                     const newCart = [...prev];
                     for (let i in newCart)
@@ -144,7 +136,7 @@ export default function Product() {
               className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125"
               onClick={() => {
                 setQty(qty + 1);
-                if (isInCart(fruit.id)) {
+                if (isInCart(fruit.id, cart)) {
                   setCart((prev) => {
                     const newCart = [...prev];
                     for (let i in newCart)
@@ -176,7 +168,7 @@ export default function Product() {
             onClick={() => {
               setCart((prev) => {
                 const newCart = [...prev];
-                if (!isInCart(fruit.id)) {
+                if (!isInCart(fruit.id, cart)) {
                   newCart.push({ fruitId: fruit.id, count: qty });
                   localStorage.setItem("cart", JSON.stringify(newCart));
                   return newCart;
@@ -189,7 +181,7 @@ export default function Product() {
             }}
           >
             <Icon path={mdiCart} size={1} />
-            {isInCart(fruit.id) ? "Remove From Cart" : "Add To Cart"}
+            {isInCart(fruit.id, cart) ? "Remove From Cart" : "Add To Cart"}
           </button>
         </div>
       </div>

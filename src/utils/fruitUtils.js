@@ -35,3 +35,13 @@ export function getFruitById(id) {
 export function fruitExistsBySlug(slug) {
   return slug in FRUITS_BY_SLUG;
 }
+
+/**
+ * Check if a fruit is in the cart
+ * @param {Array} cart - The cart array containing fruit items
+ * @param {number} fruitId - The ID of the fruit to check
+ * @returns {boolean} True if the fruit is in the cart, false otherwise
+ */
+export function isInCart(cart, fruitId) {
+  return cart.some((item) => item.fruitId === fruitId);
+}
