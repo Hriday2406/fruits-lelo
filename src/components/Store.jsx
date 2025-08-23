@@ -19,6 +19,7 @@ import {
 import { CartContext, FavContext } from "./App";
 import { Link } from "react-router-dom";
 import { Flipped, Flipper, spring } from "react-flip-toolkit";
+import { isInCart } from "../utils/fruitUtils";
 
 function Tags({ text, setFilterTags }) {
   if (text == "") return null;
@@ -272,11 +273,6 @@ export default function Store({ searchText, showFav }) {
     setFilteredFruits(tempArr);
   }, [colors, family, vitamins, searchText, showFav]);
 
-  function isInCart(id) {
-    for (let i in cart) if (cart[i].fruitId == id) return true;
-    return false;
-  }
-
   function onExit(element, index, removeElement) {
     spring({
       onUpdate: (value) => {
@@ -371,14 +367,14 @@ export default function Store({ searchText, showFav }) {
                       </span>
                     </div>
                     <Icon
-                      path={isInCart(fruit.id) ? mdiCart : mdiCartOutline}
+                      path={isInCart(cart, fruit.id) ? mdiCart : mdiCartOutline}
                       size={1}
                       className="cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_#ae9b84]"
                       color="#ae9b84"
                       onClick={() => {
                         setCart((prev) => {
                           const newCart = [...prev];
-                          if (!isInCart(fruit.id)) {
+                          if (!isInCart(cart, fruit.id)) {
                             newCart.push({ fruitId: fruit.id, count: 1 });
                             localStorage.setItem(
                               "cart",

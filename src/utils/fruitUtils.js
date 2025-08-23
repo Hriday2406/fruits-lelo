@@ -38,10 +38,32 @@ export function fruitExistsBySlug(slug) {
 
 /**
  * Check if a fruit is in the cart
- * @param {Array} cart - The cart array containing fruit items
- * @param {number} fruitId - The ID of the fruit to check
+ * Strict: only accepts an array of cart items or a JSON string representing such an array.
+ * Returns false for any other shapes (numbers, maps, single objects).
+ * @param {Array|String|null|undefined} cart - Expected: [{ fruitId, count }, ...] or a JSON string of that array
+ * @param {number|string} fruitId - The ID of the fruit to check
  * @returns {boolean} True if the fruit is in the cart, false otherwise
  */
 export function isInCart(cart, fruitId) {
-  return cart.some((item) => item.fruitId === fruitId);
+  if (!cart) return false;
+
+  let items = cart;
+  if (typeof cart === "string") {
+    try {
+      items = JSON.parse(cart);
+    } catch {
+      return false;
+    }
+  }
+
+  if (!Array.isArray(items)) return false;
+
+  const targetId = Number(fruitId);
+  if (Number.isNaN(targetId)) return false;
+
+  return items.some((item) => {
+    if (!item || typeof item !== "object") return false;
+    const id = Number(item.fruitId);
+    return !Number.isNaN(id) && id === targetId;
+  });
 }

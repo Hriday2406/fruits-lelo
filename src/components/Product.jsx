@@ -48,7 +48,7 @@ export default function Product() {
   let fruit = getFruitBySlug(slug);
 
   useEffect(() => {
-    if (fruit && isInCart(fruit.id, cart)) setQty(getQty(fruit.id));
+    if (fruit && isInCart(cart, fruit.id)) setQty(getQty(fruit.id));
     if (fruit && favs.includes(fruit.id)) setFav(true);
   }, [fruit, favs, cart, getQty]);
 
@@ -117,7 +117,7 @@ export default function Product() {
               onClick={() => {
                 if (qty == 1) return;
                 setQty(qty - 1);
-                if (isInCart(fruit.id, cart)) {
+                if (isInCart(cart, fruit.id)) {
                   setCart((prev) => {
                     const newCart = [...prev];
                     for (let i in newCart)
@@ -136,7 +136,7 @@ export default function Product() {
               className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125"
               onClick={() => {
                 setQty(qty + 1);
-                if (isInCart(fruit.id, cart)) {
+                if (isInCart(cart, fruit.id)) {
                   setCart((prev) => {
                     const newCart = [...prev];
                     for (let i in newCart)
@@ -168,7 +168,7 @@ export default function Product() {
             onClick={() => {
               setCart((prev) => {
                 const newCart = [...prev];
-                if (!isInCart(fruit.id, cart)) {
+                if (!isInCart(cart, fruit.id)) {
                   newCart.push({ fruitId: fruit.id, count: qty });
                   localStorage.setItem("cart", JSON.stringify(newCart));
                   return newCart;
@@ -181,7 +181,7 @@ export default function Product() {
             }}
           >
             <Icon path={mdiCart} size={1} />
-            {isInCart(fruit.id, cart) ? "Remove From Cart" : "Add To Cart"}
+            {isInCart(cart, fruit.id) ? "Remove From Cart" : "Add To Cart"}
           </button>
         </div>
       </div>
