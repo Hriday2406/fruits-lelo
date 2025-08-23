@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router";
-import { FRUITS } from "../utils/constants";
+import { getFruitBySlug } from "../utils/fruitUtils";
 import Icon from "@mdi/react";
 import {
   mdiCubeOutline,
@@ -11,8 +11,9 @@ import {
   mdiHeartOutline,
   mdiHeart,
 } from "@mdi/js";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { CartContext, FavContext } from "./App";
+import NotFound from "./NotFound";
 
 function Tags({ text, isVitamin }) {
   if (isVitamin)
@@ -30,32 +31,39 @@ function Tags({ text, isVitamin }) {
 
 export default function Product() {
   let { slug } = useParams();
-  let fruit = FRUITS[getIndex(slug)];
   const navigate = useNavigate();
   const { cart, setCart } = useContext(CartContext);
   const { favs, setFavs } = useContext(FavContext);
   const [qty, setQty] = useState(1);
   const [fav, setFav] = useState(false);
 
-  function getIndex(slug) {
-    for (let i = 0; i < 25; i++)
-      if (FRUITS[i].slug == slug) return FRUITS[i].id;
-  }
+  const isInCart = useCallback(
+    (id) => {
+      for (let i in cart) if (cart[i].fruitId == id) return true;
+      return false;
+    },
+    [cart],
+  );
 
-  function isInCart(id) {
-    for (let i in cart) if (cart[i].fruitId == id) return true;
-    return false;
-  }
+  const getQty = useCallback(
+    (id) => {
+      for (let i in cart) if (cart[i].fruitId == id) return cart[i].count;
+      return 1;
+    },
+    [cart],
+  );
 
-  function getQty(id) {
-    for (let i in cart) if (cart[i].fruitId == id) return cart[i].count;
-    return 1;
-  }
+  let fruit = getFruitBySlug(slug);
 
   useEffect(() => {
-    if (isInCart(fruit.id)) setQty(getQty);
-    if (favs.includes(fruit.id)) setFav(true);
-  }, []);
+    if (fruit && isInCart(fruit.id)) setQty(getQty(fruit.id));
+    if (fruit && favs.includes(fruit.id)) setFav(true);
+  }, [fruit, favs, isInCart, getQty]);
+
+  // If fruit not found, show NotFound component
+  if (!fruit) {
+    return <NotFound />;
+  }
 
   return (
     <div className="relative flex items-start gap-10 p-20">
