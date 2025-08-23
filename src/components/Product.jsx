@@ -37,15 +37,21 @@ export default function Product() {
   const [qty, setQty] = useState(1);
   const [fav, setFav] = useState(false);
 
-  const isInCart = useCallback((id) => {
-    for (let i in cart) if (cart[i].fruitId == id) return true;
-    return false;
-  }, [cart]);
+  const isInCart = useCallback(
+    (id) => {
+      for (let i in cart) if (cart[i].fruitId == id) return true;
+      return false;
+    },
+    [cart],
+  );
 
-  const getQty = useCallback((id) => {
-    for (let i in cart) if (cart[i].fruitId == id) return cart[i].count;
-    return 1;
-  }, [cart]);
+  const getQty = useCallback(
+    (id) => {
+      for (let i in cart) if (cart[i].fruitId == id) return cart[i].count;
+      return 1;
+    },
+    [cart],
+  );
 
   let fruit = getFruitBySlug(slug);
 

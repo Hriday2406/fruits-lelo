@@ -2,11 +2,11 @@ import { FRUITS } from "./constants";
 
 // Create lookup maps for better performance and resilience
 export const FRUITS_BY_SLUG = Object.fromEntries(
-  FRUITS.map((fruit) => [fruit.slug, fruit])
+  FRUITS.map((fruit) => [fruit.slug, fruit]),
 );
 
 export const FRUITS_BY_ID = Object.fromEntries(
-  FRUITS.map((fruit) => [fruit.id, fruit])
+  FRUITS.map((fruit) => [fruit.id, fruit]),
 );
 
 /**
