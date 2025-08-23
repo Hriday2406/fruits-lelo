@@ -51,7 +51,7 @@ function Tags({ text, onRemove }) {
     <div className="bg-accent flex items-center gap-1 rounded-full px-2 py-1 font-mono text-xs font-black text-black select-none">
       <button
         aria-label={`Remove filter ${text}`}
-        className="-ml-[3px] flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-black/25 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:scale-110 hover:bg-black/50 hover:shadow-md active:scale-95"
+        className="-ml-1 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-black/10 text-base font-extrabold text-white shadow-[0_0_14px_rgba(174,155,132,0.35)] transition-all duration-200 hover:scale-110 active:scale-95"
         onClick={() => onRemove(text)}
       >
         X

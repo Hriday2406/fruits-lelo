@@ -11,11 +11,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { FRUITS } from "../utils/constants";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./App";
+import Popup from "./Popup";
 
 export default function Cart() {
   const { cart, setCart } = useContext(CartContext);
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
+  const [popup, setPopup] = useState({
+    visible: false,
+    type: "info",
+    title: "",
+    message: "",
+  });
 
   function handleDelete(index) {
     setCart((prev) => {
@@ -35,16 +42,16 @@ export default function Cart() {
 
   return (
     <div className="relative flex items-start justify-between px-14 py-32">
-      <div className="absolute left-10 top-5">
+      <div className="absolute top-5 left-10">
         <Icon
           path={mdiKeyboardBackspace}
           size={1.5}
-          className="cursor-pointer text-accent transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
+          className="text-accent cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
           onClick={() => {
             navigate(-1);
           }}
         />
-        <h1 className="pl-4 pt-3 text-2xl font-bold">Shopping Cart</h1>
+        <h1 className="pt-3 pl-4 text-2xl font-bold">Shopping Cart</h1>
       </div>
       <div className="flex w-2/5 flex-col gap-[25px]">
         {cart.map((item, index) => {
@@ -55,7 +62,7 @@ export default function Cart() {
                 to={`/store/${fruit.slug}`}
                 className="group shrink-0 select-none"
               >
-                <div className="shrink-0 rounded-2xl border-2 border-dashed border-dash p-[40px]">
+                <div className="border-dash shrink-0 rounded-2xl border-2 border-dashed p-[40px]">
                   <img
                     src={fruit.src}
                     alt={fruit.name}
@@ -67,14 +74,14 @@ export default function Cart() {
                 <div className="justify flex flex-col gap-2">
                   <h3 className="font-bold">{fruit.name}</h3>
                   <span className="text-gray">{fruit.family} family</span>
-                  <div className="flex gap-1 text-accent">
+                  <div className="text-accent flex gap-1">
                     <Icon path={mdiCubeOutline} size={0.8} />
                     <h4 className="font-mono text-sm font-bold">In Stock</h4>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   <button
-                    className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125"
+                    className="bg-secondary size-5 rounded-md p-[5px] transition-all hover:scale-125"
                     onClick={() => {
                       setCart((prev) => {
                         const newCart = [...prev];
@@ -98,7 +105,7 @@ export default function Cart() {
                   </button>
                   <span>{item.count}</span>
                   <button
-                    className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125"
+                    className="bg-secondary size-5 rounded-md p-[5px] transition-all hover:scale-125"
                     onClick={() => {
                       setCart((prev) => {
                         const newCart = [...prev];
@@ -117,7 +124,7 @@ export default function Cart() {
                   path={mdiTrashCan}
                   size={1.1}
                   color="red"
-                  className="cursor-pointer rounded-md bg-secondary p-1 transition-all hover:scale-125"
+                  className="bg-secondary cursor-pointer rounded-md p-1 transition-all hover:scale-125"
                   onClick={() => {
                     handleDelete(index);
                   }}
@@ -128,14 +135,14 @@ export default function Cart() {
           );
         })}
         {cart.length == 0 && (
-          <p className="w-fit rounded-2xl border-2 border-dashed border-dash p-10 font-mono text-xl text-accent">
+          <p className="border-dash text-accent w-fit rounded-2xl border-2 border-dashed p-10 font-mono text-xl">
             CART IS EMPTY.
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-[25px] rounded-2xl border-2 border-dashed border-dash p-9 text-white transition-all duration-500 hover:shadow-[0_0_15px_#AE9B84]">
+      <div className="border-dash flex flex-col gap-[25px] rounded-2xl border-2 border-dashed p-9 text-white transition-all duration-500 hover:shadow-[0_0_15px_#AE9B84]">
         <h2 className="text-2xl font-bold">Order Summary</h2>
-        <div className="flex flex-col gap-2 border-y-[1px] border-gray py-6 font-mono font-normal text-white">
+        <div className="border-gray flex flex-col gap-2 border-y-[1px] py-6 font-mono font-normal text-white">
           {cart.map((item) => {
             const fruit = FRUITS[item.fruitId];
             return (
@@ -151,7 +158,7 @@ export default function Cart() {
             );
           })}
           {cart.length == 0 && (
-            <p className="text-center font-mono text-lg text-accent">
+            <p className="text-accent text-center font-mono text-lg">
               CART IS EMPTY.
             </p>
           )}
@@ -159,25 +166,33 @@ export default function Cart() {
         <div className="flex justify-between text-2xl font-bold">
           <div className="flex items-center gap-2">
             <span>Total</span>
-            <span className="text-base font-normal text-gray">
+            <span className="text-gray text-base font-normal">
               ({cart.length} Items)
             </span>
           </div>
           <span className="font-mono">${total.toFixed(1)}</span>
         </div>
         <button
-          className="flex w-[300px] items-center justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]"
+          className="bg-accent hover:bg-secondary hover:text-accent flex w-[300px] items-center justify-center gap-3 rounded-xl px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84]"
           onClick={() => {
             if (cart.length == 0) {
-              alert(
-                "You cannot checkout with an empty cart, put some fruits in the cart first.",
-              );
+              setPopup({
+                visible: true,
+                type: "error",
+                title: "Cart khaali hai",
+                message:
+                  "Kuch phalon ko cart mein daalo, tabhi checkout kar paoge.",
+              });
               return;
             }
 
-            alert(
-              "Yay! You have bought the fruits! It will be delivered to you.",
-            );
+            setPopup({
+              visible: true,
+              type: "success",
+              title: "Order pakka hua",
+              message:
+                "Yay! Aapke phal order ho gaye hain — jaldi hi deliver ho jayenge!",
+            });
             setCart([]);
             localStorage.setItem("cart", JSON.stringify([]));
           }}
@@ -185,6 +200,13 @@ export default function Cart() {
           <Icon path={mdiCheckAll} size={0.8} />
           Checkout
         </button>
+        <Popup
+          visible={popup.visible}
+          type={popup.type}
+          title={popup.title}
+          message={popup.message}
+          onClose={() => setPopup((p) => ({ ...p, visible: false }))}
+        />
       </div>
     </div>
   );

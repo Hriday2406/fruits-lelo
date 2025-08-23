@@ -3,9 +3,10 @@ import Icon from "@mdi/react";
 import { mdiCart, mdiCheckAll, mdiTrashCan } from "@mdi/js";
 import { useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { CartContext } from "./App";
 
-export default function CartCard() {
+export default function CartCard({ onNotify }) {
   const navigate = useNavigate();
   const { cart, setCart } = useContext(CartContext);
   const [total, setTotal] = useState(0);
@@ -27,17 +28,17 @@ export default function CartCard() {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border-2 border-dashed border-dash p-9 text-white shadow-[0_0_15px_#AE9B84]">
-      <h2 className="border-b-[1px] border-gray pb-6 text-2xl font-bold">
+    <div className="border-dash bg-bg/80 overflow-hidden rounded-2xl border-2 border-dashed p-9 text-white shadow-[0_10px_30px_rgba(174,155,132,0.12),0_0_40px_rgba(174,155,132,0.06)] backdrop-blur-sm">
+      <h2 className="border-gray border-b-[1px] pb-6 text-2xl font-bold">
         Shopping Cart
       </h2>
-      <div className="flex max-h-[362px] flex-col gap-[25px] overflow-y-auto py-9 pr-5 scrollbar-thin scrollbar-webkit">
+      <div className="scrollbar-thin scrollbar-webkit flex max-h-[362px] flex-col gap-[25px] overflow-y-auto py-9 pr-5">
         {cart.map((item, index) => {
           const fruit = FRUITS[item.fruitId];
 
           return (
             <div className="flex items-center gap-[25px]" key={fruit.id}>
-              <div className="shrink-0 rounded-2xl border-2 border-dashed border-dash p-[25px]">
+              <div className="border-dash shrink-0 rounded-2xl border-2 border-dashed p-[25px]">
                 <img src={fruit.src} alt={fruit.name} className="size-[25px]" />
               </div>
               <div className="flex w-full items-center justify-between">
@@ -51,7 +52,7 @@ export default function CartCard() {
                     path={mdiTrashCan}
                     size={1.1}
                     color="red"
-                    className="cursor-pointer rounded-md bg-secondary p-1 transition-all hover:scale-125"
+                    className="bg-secondary cursor-pointer rounded-md p-1 transition-all hover:scale-125"
                     onClick={() => {
                       handleDelete(index);
                     }}
@@ -68,29 +69,52 @@ export default function CartCard() {
           );
         })}
         {cart.length == 0 && (
-          <p className="text-center font-mono text-lg text-accent">
+          <p className="text-accent text-center font-mono text-lg">
             CART IS EMPTY.
           </p>
         )}
       </div>
-      <div className="flex justify-between border-t-[1px] border-gray py-6 font-mono text-2xl font-bold">
+      <div className="border-gray flex justify-between border-t-[1px] py-6 font-mono text-2xl font-bold">
         <span>Total</span>
         <span>${total.toFixed(1)}</span>
       </div>
       <div className="flex w-[415px] flex-col gap-3">
         <button
-          className="flex items-center justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]"
+          className="bg-accent hover:bg-secondary hover:text-accent flex items-center justify-center gap-3 rounded-xl px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84]"
           onClick={() => {
             if (cart.length == 0) {
-              alert(
-                "You cannot checkout with an empty cart, put some fruits in the cart first.",
-              );
+              if (onNotify) {
+                onNotify({
+                  visible: true,
+                  type: "error",
+                  title: "Cart khaali hai",
+                  message:
+                    "Kuch phalon ko cart mein daalo, tabhi checkout kar paoge.",
+                });
+              } else {
+                alert(
+                  "You cannot checkout with an empty cart, put some fruits in the cart first.",
+                );
+              }
               return;
             }
 
-            alert(
-              "Yay! You have bought the fruits! It will be delivered to you.",
-            );
+            if (onNotify) {
+              onNotify({
+                visible: true,
+                type: "success",
+                title: "Order pakka hua",
+                message: `Yay! Aapke phal order ho gaye hain — jaldi hi deliver ho jayenge! Total: $${total.toFixed(
+                  1,
+                )}`,
+              });
+            } else {
+              alert(
+                `Yay! You have bought the fruits! It will be delivered to you. Total: $${total.toFixed(
+                  1,
+                )}`,
+              );
+            }
             setCart([]);
             localStorage.setItem("cart", JSON.stringify([]));
           }}
@@ -99,7 +123,7 @@ export default function CartCard() {
           Checkout
         </button>
         <button
-          className="flex items-center justify-center gap-3 rounded-xl bg-secondary px-24 py-4 font-mono font-bold text-accent transition-all duration-500 hover:bg-accent hover:text-black hover:shadow-[0_0_10px] hover:shadow-accent"
+          className="bg-secondary text-accent hover:bg-accent hover:shadow-accent flex items-center justify-center gap-3 rounded-xl px-24 py-4 font-mono font-bold transition-all duration-500 hover:text-black hover:shadow-[0_0_10px]"
           onClick={() => {
             navigate("/cart");
           }}
@@ -108,6 +132,11 @@ export default function CartCard() {
           Open Cart
         </button>
       </div>
+      {/* popup is lifted to Header; no local Popup here */}
     </div>
   );
 }
+
+CartCard.propTypes = {
+  onNotify: PropTypes.func,
+};
