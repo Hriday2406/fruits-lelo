@@ -11,6 +11,54 @@ Fruits Lelo is a small React + Vite single-page e-commerce style demo focused on
 
 ---
 
+## 1.1 Next steps — prioritized, actionable
+
+This short plan lists the immediate tasks to make incremental, testable progress. Each item includes target files, success criteria, and an estimated effort.
+
+Quick fixes (<= 1 hour)
+
+- 1. Add `cursor-pointer` / focus-visible to interactive icons and buttons
+  - Files: `src/components/Product.jsx`, `src/components/Cart.jsx`, `src/components/cartCard.jsx`, `src/components/Header.jsx`
+  - Success: all interactive controls have `cursor-pointer` on desktop and visible focus ring for keyboard users
+
+- 2. Ensure Popups are mobile-friendly (size/padding/glow)
+  - Files: `src/components/Popup.jsx`
+  - Success: popup centered on small screens, readable text, close button visible (validated on a 360px width viewport)
+
+High priority (1-3 hours)
+
+- 3. Centralize localStorage access into `src/utils/storage.js`
+  - Files: new `src/utils/storage.js`, update `src/components/App.jsx`, Cart/Product/cartCard to use helpers
+  - Success: `localStorage` reads/writes wrapped with try/catch, tests for fallback behavior added
+
+- 4. Add FRUITS lookup maps and fix brittle slug/id lookup
+  - Files: `src/utils/constants.js`, `src/components/Product.jsx`
+  - Success: `FRUITS_BY_SLUG` and `FRUITS_BY_ID` exported; Product uses map lookup and gracefully shows `NotFound` for unknown slugs
+
+Medium priority (3-8 hours)
+
+- 5. Accessibility pass: convert icon-only elements to semantic buttons with `aria-label` and `aria-pressed`
+  - Files: `src/components/*` (Header, Product, Cart, cartCard)
+  - Success: no interactive element is a bare `div`/`span`, keyboard navigation works, basic `axe` audit passes (run locally with `npx axe-core` or Playwright + axe)
+
+- 6. Replace `alert()` with `Popup`/AntD `message` and unify checkout flow
+  - Files: `src/components/cartCard.jsx`, `src/components/Cart.jsx`, `src/components/Popup.jsx`
+  - Success: no `alert()` calls remain; checkout shows non-blocking popup and clears cart
+
+Longer term / Tech debt (day or more)
+
+- 7. Add Vitest + RTL and cover core flows (filtering, cart ops, product page)
+- 8. Convert price values to numbers and standardize formatting
+- 9. Performance: lazy-load images + memoize filters
+
+How to validate each change
+
+- Run dev server: `npm run dev` and manually exercise flows listed in the Quick QA checklist (updated below).
+- Run lint/format: `npx prettier --write . && npm run lint`.
+- For accessibility tasks, use keyboard-only navigation and a small `axe` audit.
+
+If any item is unclear I can open small PRs with the change + unit test or create issues to split the work.
+
 ## 2. Tech Stack & Tooling
 
 - Runtime: React 18 (createRoot API)
