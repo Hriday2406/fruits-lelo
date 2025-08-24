@@ -286,6 +286,19 @@ export const COLOROPTIONS = [
   "Blue",
   "Black",
 ];
+
+// Mapping from color name used in filters to a representative hex code.
+// These hexes are used for UI accents/backgrounds where a color value is required.
+export const COLOR_HEX = {
+  Purple: "#6B21A8",
+  Green: "#16A34A",
+  Brown: "#7C3F00",
+  Red: "#EF4444",
+  Orange: "#F97316",
+  Yellow: "#F59E0B",
+  Blue: "#3B82F6",
+  Black: "#000000",
+};
 export const FAMILYOPTIONS = [
   { label: "Rose", value: "Rose" },
   { label: "Citrus", value: "Citrus" },
