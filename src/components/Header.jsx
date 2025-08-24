@@ -23,9 +23,9 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="px-4 py-4 sm:px-10 sm:py-6">
+    <header className="bg-bg border-secondary fixed top-0 right-0 left-0 z-50 border-b px-4 py-4 sm:px-10 sm:py-6">
       {/* Mobile Header */}
-      <div className="flex items-center justify-between lg:hidden">
+      <div className="flex h-full items-center justify-between lg:hidden">
         <Link
           to={"/"}
           className="text-accent cursor-pointer text-2xl font-bold transition-all hover:drop-shadow-[0_0_10px] sm:text-3xl"
@@ -246,7 +246,7 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
       </div>
 
       {/* Desktop Header */}
-      <div className="hidden justify-between lg:flex">
+      <div className="hidden h-full items-center justify-between lg:flex">
         <div className="flex items-center gap-6 select-none">
           <Link
             to={"/"}

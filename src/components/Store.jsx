@@ -55,33 +55,7 @@ function Tags({ text, setFilterTags }) {
   );
 }
 
-function ColorCheckBox({ name, hex }) {
-  // name: display label (e.g., "Red"), hex: '#RRGGBB' used for backgrounds/borders
-  const themeColor = hex || COLOR_HEX[name] || "#ae9b84";
-  return (
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: themeColor,
-          colorText: "#fff",
-          fontFamily: "Roboto",
-          colorBgContainer: themeColor,
-          colorBorder: themeColor,
-          borderRadiusSM: 50,
-          controlInteractiveSize: 25,
-          colorWhite: "#fff",
-        },
-      }}
-    >
-      <Checkbox
-        className="flex w-1/4 flex-col items-center justify-center gap-2"
-        value={name}
-      >
-        {name}
-      </Checkbox>
-    </ConfigProvider>
-  );
-}
+// ...removed ColorCheckBox (replaced by compact custom grid)
 
 function Aside({
   colors,
@@ -97,9 +71,7 @@ function Aside({
   const [isFamilyOpen, setIsFamilyOpen] = useState(true);
   const [isVitaminOpen, setIsVitaminOpen] = useState(true);
 
-  function handleColorChange(checkedValues) {
-    setColors(checkedValues);
-  }
+  // color changes handled by custom grid buttons below
   function handleFamilyChange(checkedValues) {
     if (checkedValues.length == 0) setFamily("");
     else setFamily(checkedValues[0]);
@@ -111,7 +83,7 @@ function Aside({
   const FilterContent = () => (
     <div className="space-y-6">
       {/* Clear all filters button */}
-      <div className="flex justify-start">
+      <div className="flex justify-start md:justify-end">
         <button
           className="bg-secondary hover:bg-accent cursor-pointer rounded-lg px-3 py-2 text-sm font-medium transition-all hover:text-black"
           onClick={() => {
@@ -140,21 +112,64 @@ function Aside({
           />
         </div>
         <div
-          className={`mt-4 origin-top overflow-hidden transition-all duration-500 lg:m-6 ${isColorOpen ? "h-72" : "h-0"}`}
+          className={`mt-4 origin-top overflow-hidden transition-all duration-500 ${isColorOpen ? "h-72" : "h-0"}`}
         >
-          <Checkbox.Group
-            className="flex flex-wrap gap-3 lg:gap-5"
-            onChange={handleColorChange}
-            value={colors}
-          >
-            {COLOROPTIONS.map((color, index) => (
-              <ColorCheckBox
-                name={color}
-                hex={COLOR_HEX[color]}
-                key={color + index}
-              />
-            ))}
-          </Checkbox.Group>
+          <div className="grid w-full grid-cols-3 items-start gap-4 lg:gap-6">
+            {COLOROPTIONS.map((color, index) => {
+              const themeColor = COLOR_HEX[color] || "#ae9b84";
+              const selected = colors.includes(color);
+              return (
+                <button
+                  key={color + index}
+                  type="button"
+                  aria-pressed={selected}
+                  onClick={() => {
+                    setColors((prev) => {
+                      if (prev.includes(color))
+                        return prev.filter((c) => c !== color);
+                      return [...prev, color];
+                    });
+                  }}
+                  className="flex w-full cursor-pointer flex-col items-center justify-start gap-2"
+                >
+                  <span
+                    className={`relative inline-block rounded-full shadow-sm transition-all ${selected ? "ring-accent ring-2 ring-offset-1" : ""}`}
+                    style={{
+                      width: 28,
+                      height: 28,
+                      backgroundColor: themeColor,
+                      boxShadow: selected
+                        ? "0 0 14px rgba(174,155,132,0.6)"
+                        : undefined,
+                    }}
+                  >
+                    {selected && (
+                      <svg
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                      >
+                        <path
+                          d="M20 6L9 17l-5-5"
+                          stroke="#ffffff"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    )}
+                  </span>
+                  <span className="mt-3 w-full text-center text-sm">
+                    {color}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -242,30 +257,47 @@ function Aside({
 
   return (
     <>
-      {/* Mobile Filter Overlay */}
-      {isFilterOpen && (
-        <div className="bg-opacity-50 fixed inset-0 z-50 bg-black lg:hidden">
-          <div className="bg-bg absolute top-0 right-0 h-full w-80 max-w-[90vw] shadow-lg">
-            <div className="flex h-full flex-col">
-              <div className="border-secondary flex items-center justify-between border-b p-6">
-                <h2 className="text-xl font-bold">Filters</h2>
-                <button
-                  onClick={() => setIsFilterOpen(false)}
-                  className="p-2 transition-all hover:scale-125"
-                >
-                  <Icon path={mdiWindowClose} size={1} color="#ae9b84" />
-                </button>
-              </div>
-              <div className="flex-1 overflow-y-auto p-6">
-                <FilterContent />
-              </div>
+      {/* Mobile Filter Overlay - always mounted so it can animate */}
+      <div className="lg:hidden">
+        {/* Backdrop */}
+        <div
+          className={`fixed inset-0 z-50 transition-opacity duration-300 ${
+            isFilterOpen
+              ? "pointer-events-auto opacity-100 backdrop-blur-xs"
+              : "pointer-events-none opacity-0"
+          }`}
+          onClick={() => setIsFilterOpen(false)}
+          aria-hidden={!isFilterOpen}
+        />
+
+        {/* Sliding Panel from right */}
+        <aside
+          className={`bg-bg border-dash fixed top-0 right-0 z-50 h-full w-80 max-w-[90vw] transform rounded-l-2xl border-2 border-dashed shadow-2xl transition-transform duration-300 ${
+            isFilterOpen
+              ? "translate-x-0 shadow-[0_0_15px_#AE9B84]"
+              : "translate-x-full"
+          }`}
+          aria-hidden={!isFilterOpen}
+        >
+          <div className="flex h-full flex-col">
+            <div className="border-secondary flex items-center justify-between border-b p-6">
+              <h2 className="text-xl font-bold">Filters</h2>
+              <button
+                onClick={() => setIsFilterOpen(false)}
+                className="p-2 transition-all hover:scale-125"
+              >
+                <Icon path={mdiWindowClose} size={1} color="#ae9b84" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              <FilterContent />
             </div>
           </div>
-        </div>
-      )}
+        </aside>
+      </div>
 
       {/* Desktop Sidebar */}
-      <div className="bg-bg fixed top-20 left-0 hidden h-[calc(100vh-5rem)] w-72 overflow-y-auto p-10 pt-4 select-none lg:block">
+      <div className="bg-bg md:scrollbar-thin md:scrollbar-webkit border-dash fixed top-24 left-0 hidden h-[calc(100vh-5rem)] w-72 overflow-y-auto border-r-2 border-dashed p-10 pt-4 select-none lg:block">
         <FilterContent />
       </div>
     </>
@@ -346,7 +378,6 @@ export default function Store({ searchText, showFav }) {
         isFilterOpen={isFilterOpen}
         setIsFilterOpen={setIsFilterOpen}
       />
-
       <div className="flex w-full flex-col items-start gap-4 p-4 lg:pt-10 lg:pr-10 lg:pl-80">
         {/* Mobile Filter Button and Header */}
         <div className="flex w-full items-center justify-between">
