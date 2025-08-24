@@ -46,11 +46,12 @@ Medium priority (3-8 hours)
 - 6. Replace `alert()` with `Popup`/AntD `message` and unify checkout flow
   - Files: `src/components/cartCard.jsx`, `src/components/Cart.jsx`, `src/components/Popup.jsx`
   - Success: no `alert()` calls remain; checkout shows non-blocking popup and clears cart
+  - Status: Already Completed
 
 Longer term / Tech debt (day or more)
 
 - 7. Add Vitest + RTL and cover core flows (filtering, cart ops, product page)
-- 8. Convert price values to numbers and standardize formatting
+- 8. Convert price values to numbers and standardize formatting [ Already Completed ]
 - 9. Performance: lazy-load images + memoize filters
 
 How to validate each change
