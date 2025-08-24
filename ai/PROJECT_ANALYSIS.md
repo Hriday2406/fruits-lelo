@@ -20,6 +20,7 @@ Quick fixes (<= 1 hour)
 - 1. Add `cursor-pointer` / focus-visible to interactive icons and buttons
   - Files: `src/components/Product.jsx`, `src/components/Cart.jsx`, `src/components/cartCard.jsx`, `src/components/Header.jsx`
   - Success: all interactive controls have `cursor-pointer` on desktop and visible focus ring for keyboard users
+  - Status: Completed — added `role`, `tabIndex`, `onKeyDown` handlers, and Tailwind `focus-visible` styles to interactive elements in the mentioned components.
 
 - 2. Ensure Popups are mobile-friendly (size/padding/glow)
   - Files: `src/components/Popup.jsx`

@@ -62,11 +62,13 @@ export default function Product() {
       <Icon
         path={mdiKeyboardBackspace}
         size={1.5}
-        className="text-accent absolute top-4 left-4 z-10 cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84] sm:top-8 sm:left-8 lg:top-10 lg:left-10"
+        className="text-accent focus-visible:outline-accent absolute top-4 left-4 z-10 cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84] focus:outline-none focus-visible:outline-2 sm:top-8 sm:left-8 lg:top-10 lg:left-10"
         onClick={() => {
           navigate(-1);
         }}
         aria-label="Go back"
+        role="button"
+        tabIndex={0}
       />
       <div className="group border-dash relative w-full shrink-0 rounded-2xl border-2 border-dashed p-10 select-none sm:p-20 lg:w-auto lg:p-[180px]">
         <img
@@ -77,7 +79,7 @@ export default function Product() {
         <Icon
           path={fav ? mdiHeart : mdiHeartOutline}
           size={1}
-          className="absolute top-4 right-4 cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red] sm:top-6 sm:right-6 lg:top-10 lg:right-10"
+          className="focus-visible:outline-accent absolute top-4 right-4 cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red] focus:outline-none focus-visible:outline-2 sm:top-6 sm:right-6 lg:top-10 lg:right-10"
           color={fav ? "red" : "white"}
           onClick={() => {
             setFav(!fav);
@@ -93,6 +95,9 @@ export default function Product() {
               return newArr;
             });
           }}
+          role="button"
+          tabIndex={0}
+          aria-label={fav ? "Remove favorite" : "Add favorite"}
         />
         <div className="absolute -bottom-8 left-0 flex flex-wrap items-center gap-2 sm:-bottom-10">
           {fruit.colors.map((color) => (
@@ -116,7 +121,7 @@ export default function Product() {
           <h5 className="font-mono text-sm font-bold">${fruit.price}</h5>
           <div className="flex gap-2">
             <button
-              className="bg-secondary size-8 cursor-pointer rounded-md p-[5px] transition-all hover:scale-125 sm:size-10 lg:size-5"
+              className="bg-secondary focus-visible:outline-accent size-8 cursor-pointer rounded-md p-[5px] transition-all hover:scale-125 focus:outline-none focus-visible:outline-2 sm:size-10 lg:size-5"
               onClick={() => {
                 if (qty == 1) return;
                 setQty(qty - 1);
@@ -138,7 +143,7 @@ export default function Product() {
               {qty}
             </span>
             <button
-              className="bg-secondary size-8 cursor-pointer rounded-md p-[5px] transition-all hover:scale-125 sm:size-10 lg:size-5"
+              className="bg-secondary focus-visible:outline-accent size-8 cursor-pointer rounded-md p-[5px] transition-all hover:scale-125 focus:outline-none focus-visible:outline-2 sm:size-10 lg:size-5"
               onClick={() => {
                 setQty(qty + 1);
                 if (isInCart(cart, fruit.id)) {
@@ -162,16 +167,17 @@ export default function Product() {
         </div>
         <div className="flex w-full flex-col gap-3 lg:w-[400px]">
           <button
-            className="bg-accent hover:bg-secondary hover:text-accent flex w-full cursor-pointer justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84] sm:px-12 sm:py-4 lg:px-24"
+            className="bg-accent hover:bg-secondary hover:text-accent focus-visible:outline-accent flex w-full cursor-pointer justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84] focus:outline-none focus-visible:outline-2 sm:px-12 sm:py-4 lg:px-24"
             onClick={() => {
               navigate("/cart");
             }}
+            aria-label="Buy now"
           >
             <Icon path={mdiCursorDefault} size={1} />
             Buy Now
           </button>
           <button
-            className="bg-secondary text-accent hover:bg-accent hover:shadow-accent flex w-full cursor-pointer justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold transition-all duration-500 hover:text-black hover:shadow-[0_0_10px] sm:px-12 sm:py-4 lg:px-24"
+            className="bg-secondary text-accent hover:bg-accent hover:shadow-accent focus-visible:outline-accent flex w-full cursor-pointer justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold transition-all duration-500 hover:text-black hover:shadow-[0_0_10px] focus:outline-none focus-visible:outline-2 sm:px-12 sm:py-4 lg:px-24"
             onClick={() => {
               setCart((prev) => {
                 const newCart = [...prev];

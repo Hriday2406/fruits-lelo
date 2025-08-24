@@ -83,9 +83,16 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
                   path={showFav ? mdiHeart : mdiHeartOutline}
                   size={1}
                   color="#ae9b84"
-                  className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
+                  className="focus-visible:outline-accent cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84] focus:outline-none focus-visible:outline-2"
                   onClick={() => {
                     setShowFav((prev) => !prev);
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={showFav ? "View all" : "View favorites"}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ")
+                      setShowFav((prev) => !prev);
                   }}
                 />
               </Link>
@@ -101,9 +108,15 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
                 path={mdiCart}
                 size={1}
                 color="#ae9b84"
-                className="cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
+                className="focus-visible:outline-accent cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84] focus:outline-none focus-visible:outline-2"
                 onClick={() => {
                   navigate("/cart");
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label="Open cart"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") navigate("/cart");
                 }}
               />
             </Badge>
@@ -111,7 +124,7 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
 
           {/* Hamburger Menu Button */}
           <button
-            className="p-2 transition-all hover:scale-125"
+            className="focus-visible:outline-accent p-2 transition-all hover:scale-125 focus:outline-none focus-visible:outline-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -152,7 +165,7 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
               <h2 className="text-xl font-bold">Menu</h2>
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="p-2 transition-all duration-300 hover:scale-125 hover:rotate-90"
+                className="focus-visible:outline-accent p-2 transition-all duration-300 hover:scale-125 hover:rotate-90 focus:outline-none focus-visible:outline-2"
                 aria-label="Close menu"
               >
                 <Icon path={mdiClose} size={1} color="#ae9b84" />
@@ -191,10 +204,19 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
                     path={mdiWindowClose}
                     size={0.8}
                     color="#ae9b84"
-                    className="cursor-pointer transition-all hover:scale-125"
+                    className="focus-visible:outline-accent cursor-pointer transition-all hover:scale-125 focus:outline-none focus-visible:outline-2"
                     onClick={() => {
                       if (searchRef.current) searchRef.current.value = "";
                       setSearchText("");
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Clear search"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        if (searchRef.current) searchRef.current.value = "";
+                        setSearchText("");
+                      }
                     }}
                   />
                 </form>

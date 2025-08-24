@@ -46,10 +46,16 @@ export default function Cart() {
         <Icon
           path={mdiKeyboardBackspace}
           size={1.5}
-          className="text-accent cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84] md:self-start"
+          className="text-accent focus-visible:outline-accent cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84] focus:outline-none focus-visible:outline-2 md:self-start"
           onClick={() => {
             navigate(-1);
           }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") navigate(-1);
+          }}
+          aria-label="Go back"
         />
         <h1 className="text-xl font-bold sm:text-2xl">Shopping Cart</h1>
       </div>
@@ -100,7 +106,7 @@ export default function Cart() {
                 <div className="flex items-center justify-between lg:flex-col lg:gap-2">
                   <div className="flex items-center gap-2">
                     <button
-                      className="bg-secondary flex h-6 w-6 cursor-pointer items-center justify-center rounded-md p-[5px] transition-all hover:scale-125 lg:h-5 lg:w-5"
+                      className="bg-secondary focus-visible:outline-accent flex h-6 w-6 cursor-pointer items-center justify-center rounded-md p-[5px] transition-all hover:scale-125 focus:outline-none focus-visible:outline-2 lg:h-5 lg:w-5"
                       onClick={() => {
                         setCart((prev) => {
                           const newCart = [...prev];
@@ -126,7 +132,7 @@ export default function Cart() {
                       {item.count}
                     </span>
                     <button
-                      className="bg-secondary flex h-6 w-6 cursor-pointer items-center justify-center rounded-md p-[5px] transition-all hover:scale-125 lg:h-5 lg:w-5"
+                      className="bg-secondary focus-visible:outline-accent flex h-6 w-6 cursor-pointer items-center justify-center rounded-md p-[5px] transition-all hover:scale-125 focus:outline-none focus-visible:outline-2 lg:h-5 lg:w-5"
                       onClick={() => {
                         setCart((prev) => {
                           const newCart = [...prev];
@@ -146,10 +152,17 @@ export default function Cart() {
                       path={mdiTrashCan}
                       size={0.9}
                       color="red"
-                      className="bg-secondary cursor-pointer rounded-md p-1 transition-all hover:scale-125 lg:size-[1.1]"
+                      className="bg-secondary focus-visible:outline-accent cursor-pointer rounded-md p-1 transition-all hover:scale-125 focus:outline-none focus-visible:outline-2 lg:size-[1.1]"
                       onClick={() => {
                         handleDelete(index);
                       }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ")
+                          handleDelete(index);
+                      }}
+                      aria-label="Remove item"
                     />
                     <span className="font-mono text-sm font-bold lg:text-base">
                       ${fruit.price}

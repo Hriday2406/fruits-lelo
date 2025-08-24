@@ -52,10 +52,17 @@ export default function CartCard({ onNotify }) {
                     path={mdiTrashCan}
                     size={1.1}
                     color="red"
-                    className="bg-secondary cursor-pointer rounded-md p-1 transition-all hover:scale-125"
+                    className="bg-secondary focus-visible:outline-accent cursor-pointer rounded-md p-1 transition-all hover:scale-125 focus:outline-none focus-visible:outline-2"
                     onClick={() => {
                       handleDelete(index);
                     }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        handleDelete(index);
+                    }}
+                    aria-label="Remove item"
                   />
                 </div>
                 <div className="flex h-full items-center gap-5 font-mono font-bold">
