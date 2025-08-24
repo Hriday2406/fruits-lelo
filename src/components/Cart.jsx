@@ -11,11 +11,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { FRUITS } from "../utils/constants";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./App";
+import Popup from "./Popup";
 
 export default function Cart() {
   const { cart, setCart } = useContext(CartContext);
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
+  const [popup, setPopup] = useState({
+    visible: false,
+    type: "info",
+    title: "",
+    message: "",
+  });
 
   function handleDelete(index) {
     setCart((prev) => {
@@ -93,7 +100,7 @@ export default function Cart() {
                 <div className="flex items-center justify-between lg:flex-col lg:gap-2">
                   <div className="flex items-center gap-2">
                     <button
-                      className="bg-secondary flex h-6 w-6 items-center justify-center rounded-md p-[5px] transition-all hover:scale-125 lg:h-5 lg:w-5"
+                      className="bg-secondary flex h-6 w-6 cursor-pointer items-center justify-center rounded-md p-[5px] transition-all hover:scale-125 lg:h-5 lg:w-5"
                       onClick={() => {
                         setCart((prev) => {
                           const newCart = [...prev];
@@ -119,7 +126,7 @@ export default function Cart() {
                       {item.count}
                     </span>
                     <button
-                      className="bg-secondary flex h-6 w-6 items-center justify-center rounded-md p-[5px] transition-all hover:scale-125 lg:h-5 lg:w-5"
+                      className="bg-secondary flex h-6 w-6 cursor-pointer items-center justify-center rounded-md p-[5px] transition-all hover:scale-125 lg:h-5 lg:w-5"
                       onClick={() => {
                         setCart((prev) => {
                           const newCart = [...prev];
@@ -192,18 +199,27 @@ export default function Cart() {
           <span className="font-mono">${total.toFixed(1)}</span>
         </div>
         <button
-          className="bg-accent hover:bg-secondary hover:text-accent flex w-full items-center justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84] lg:w-[300px] lg:px-24 lg:py-4"
+          className="bg-accent hover:bg-secondary hover:text-accent flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84] lg:w-[300px] lg:px-24 lg:py-4"
           onClick={() => {
             if (cart.length == 0) {
-              alert(
-                "You cannot checkout with an empty cart, put some fruits in the cart first.",
-              );
+              setPopup({
+                visible: true,
+                type: "error",
+                title: "Cart khaali hai",
+                message:
+                  "Kuch phalon ko cart mein daalo, tabhi checkout kar paoge.",
+              });
               return;
             }
 
-            alert(
-              "Yay! You have bought the fruits! It will be delivered to you.",
-            );
+            setPopup({
+              visible: true,
+              type: "success",
+              title: "Order pakka hua",
+              message: `Yay! Aapke phal order ho gaye hain — jaldi hi deliver ho jayenge! Total: $${total.toFixed(
+                1,
+              )}`,
+            });
             setCart([]);
             localStorage.setItem("cart", JSON.stringify([]));
           }}
@@ -211,6 +227,13 @@ export default function Cart() {
           <Icon path={mdiCheckAll} size={0.8} />
           Checkout
         </button>
+        <Popup
+          visible={popup.visible}
+          type={popup.type}
+          title={popup.title}
+          message={popup.message}
+          onClose={() => setPopup((p) => ({ ...p, visible: false }))}
+        />
       </div>
     </div>
   );

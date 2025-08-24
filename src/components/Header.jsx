@@ -14,6 +14,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Badge, ConfigProvider, Popover } from "antd";
 import CartCard from "./cartCard";
 import { CartContext, FavContext } from "./App";
+import Popup from "./Popup";
 
 export default function Header({ setSearchText, showFav, setShowFav }) {
   const searchRef = useRef(null);
@@ -22,6 +23,12 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
   const { favs } = useContext(FavContext);
   const { cart } = useContext(CartContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [popup, setPopup] = useState({
+    visible: false,
+    type: "info",
+    title: "",
+    message: "",
+  });
 
   useEffect(() => {
     const handler = () => {
@@ -344,7 +351,7 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
                 </Link>
               </Badge>
               <Popover
-                content={<CartCard />}
+                content={<CartCard onNotify={(p) => setPopup(p)} />}
                 placement="bottomRight"
                 arrow={false}
                 color="#0f0f0f"
@@ -371,6 +378,13 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
           </div>
         </div>
       </div>
+      <Popup
+        visible={popup.visible}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onClose={() => setPopup((p) => ({ ...p, visible: false }))}
+      />
     </header>
   );
 }

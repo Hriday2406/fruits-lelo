@@ -116,7 +116,7 @@ export default function Product() {
           <h5 className="font-mono text-sm font-bold">${fruit.price}</h5>
           <div className="flex gap-2">
             <button
-              className="bg-secondary size-8 rounded-md p-[5px] transition-all hover:scale-125 sm:size-10 lg:size-5"
+              className="bg-secondary size-8 cursor-pointer rounded-md p-[5px] transition-all hover:scale-125 sm:size-10 lg:size-5"
               onClick={() => {
                 if (qty == 1) return;
                 setQty(qty - 1);
@@ -138,7 +138,7 @@ export default function Product() {
               {qty}
             </span>
             <button
-              className="bg-secondary size-8 rounded-md p-[5px] transition-all hover:scale-125 sm:size-10 lg:size-5"
+              className="bg-secondary size-8 cursor-pointer rounded-md p-[5px] transition-all hover:scale-125 sm:size-10 lg:size-5"
               onClick={() => {
                 setQty(qty + 1);
                 if (isInCart(cart, fruit.id)) {
@@ -162,7 +162,7 @@ export default function Product() {
         </div>
         <div className="flex w-full flex-col gap-3 lg:w-[400px]">
           <button
-            className="bg-accent hover:bg-secondary hover:text-accent flex w-full justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84] sm:px-12 sm:py-4 lg:px-24"
+            className="bg-accent hover:bg-secondary hover:text-accent flex w-full cursor-pointer justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84] sm:px-12 sm:py-4 lg:px-24"
             onClick={() => {
               navigate("/cart");
             }}
@@ -171,7 +171,7 @@ export default function Product() {
             Buy Now
           </button>
           <button
-            className="bg-secondary text-accent hover:bg-accent hover:shadow-accent flex w-full justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold transition-all duration-500 hover:text-black hover:shadow-[0_0_10px] sm:px-12 sm:py-4 lg:px-24"
+            className="bg-secondary text-accent hover:bg-accent hover:shadow-accent flex w-full cursor-pointer justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold transition-all duration-500 hover:text-black hover:shadow-[0_0_10px] sm:px-12 sm:py-4 lg:px-24"
             onClick={() => {
               setCart((prev) => {
                 const newCart = [...prev];
