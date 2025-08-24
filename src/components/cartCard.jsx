@@ -1,4 +1,4 @@
-import { FRUITS } from "../utils/constants";
+import { FRUITS, FRUITS_BY_ID } from "../utils/constants";
 import Icon from "@mdi/react";
 import { mdiCart, mdiCheckAll, mdiTrashCan } from "@mdi/js";
 import { useNavigate } from "react-router";
@@ -13,8 +13,10 @@ export default function CartCard({ onNotify }) {
 
   useEffect(() => {
     let temp = 0;
-    for (let i = 0; i < cart.length; i++)
-      temp += FRUITS[cart[i].fruitId].price * cart[i].count;
+    for (let i = 0; i < cart.length; i++) {
+      const f = FRUITS_BY_ID[cart[i].fruitId] || FRUITS[cart[i].fruitId];
+      temp += Number(f?.price || 0) * cart[i].count;
+    }
     setTotal(temp);
   }, [cart]);
 
@@ -34,7 +36,7 @@ export default function CartCard({ onNotify }) {
       </h2>
       <div className="scrollbar-thin scrollbar-webkit flex max-h-[362px] flex-col gap-[25px] overflow-y-auto py-9 pr-5">
         {cart.map((item, index) => {
-          const fruit = FRUITS[item.fruitId];
+          const fruit = FRUITS_BY_ID[item.fruitId] || FRUITS[item.fruitId];
 
           return (
             <div className="flex items-center gap-[25px]" key={fruit.id}>

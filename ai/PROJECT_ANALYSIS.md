@@ -34,6 +34,7 @@ High priority (1-3 hours)
 - 4. Add FRUITS lookup maps and fix brittle slug/id lookup
   - Files: `src/utils/constants.js`, `src/components/Product.jsx`
   - Success: `FRUITS_BY_SLUG` and `FRUITS_BY_ID` exported; Product uses map lookup and gracefully shows `NotFound` for unknown slugs
+  - Status: Completed — lookup maps exported and consumers updated where needed
 
 Medium priority (3-8 hours)
 
@@ -281,12 +282,12 @@ Add `vitest` config with jsdom, create `__tests__/` folder, and wire `npm test` 
 | 1   | High     | Add not-found route + resilient product lookup      | Prevent runtime errors on bad URLs | Completed     |
 | 2   | High     | Centralize storage utils & validate JSON parse      | Stability & maintainability        | No change yet |
 | 3   | High     | Implement No Results message (Issue #3)             | UX clarity                         | Completed     |
-| 4   | High     | Make layout responsive (Issue #6)                   | Mobile usability                   | Pending       |
-| 5   | Medium   | Add active nav highlight (Issue #4)                 | Orientation                        | Pending       |
+| 4   | High     | Make layout responsive (Issue #6)                   | Mobile usability                   | Completed     |
+| 5   | Medium   | Add active nav highlight (Issue #4)                 | Orientation                        | Completed     |
 | 6   | Medium   | Extract reusable helpers (isInCart, getFruitBySlug) | DRY principle                      | Completed     |
-| 7   | Medium   | Convert price to number                             | Data correctness                   | Pending       |
+| 7   | Medium   | Convert price to number                             | Data correctness                   | Completed     |
 | 8   | Medium   | Add lazy-loading to images                          | Performance                        | Pending       |
-| 9   | Medium   | Replace alert() with AntD message/notification      | UI polish                          | Pending       |
+| 9   | Medium   | Replace alert() with AntD message/notification      | UI polish                          | Completed     |
 | 10  | Medium   | Add accessibility attributes & roles                | Inclusivity                        | Pending       |
 | 11  | Low      | Introduce Vitest + RTL tests                        | Quality baseline                   | Pending       |
 | 12  | Low      | Add i18n scaffolding                                | Future scalability                 | Pending       |
@@ -302,6 +303,7 @@ Add `vitest` config with jsdom, create `__tests__/` folder, and wire `npm test` 
 - Extracted `isInCart` and other helpers into `src/utils/fruitUtils.js` and tightened input validation to avoid runtime errors from malformed localStorage data.
 - PR #14 (agent/dependency-update -> ai) merged on 2025-08-24; lockfile and UI changes are now in the `ai` branch.
 - Created Issue #12 (add X to remove filter tags) and Issue #13 (fix Buy Now flow on Product page).
+- Exported `FRUITS_BY_SLUG` and `FRUITS_BY_ID` in `src/utils/constants.js`; refactored `Cart.jsx` and `cartCard.jsx` to use `FRUITS_BY_ID` (with a safe fallback) and coerced prices to numbers for arithmetic.
 
 Continue to address pending items for production readiness and maintainability.
 

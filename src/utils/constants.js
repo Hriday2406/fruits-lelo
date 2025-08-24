@@ -317,3 +317,12 @@ export const VITAMINSOPTIONS = [
   { label: "Vitamin E", value: "E" },
   { label: "Vitamin B6", value: "B6" },
 ];
+
+// Convenience lookup maps (slug -> fruit) and (id -> fruit)
+// Exported here for direct imports in components if needed. Primary
+// lookup helpers remain in `src/utils/fruitUtils.js` which uses these maps.
+export const FRUITS_BY_SLUG = Object.fromEntries(
+  FRUITS.map((f) => [f.slug, f]),
+);
+
+export const FRUITS_BY_ID = Object.fromEntries(FRUITS.map((f) => [f.id, f]));
