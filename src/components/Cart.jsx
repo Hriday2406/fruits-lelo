@@ -8,7 +8,7 @@ import {
   mdiCheckAll,
 } from "@mdi/js";
 import { Link, useNavigate } from "react-router-dom";
-import { FRUITS } from "../utils/constants";
+import { FRUITS, FRUITS_BY_ID } from "../utils/constants";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./App";
 import Popup from "./Popup";
@@ -35,8 +35,10 @@ export default function Cart() {
 
   useEffect(() => {
     let temp = 0;
-    for (let i = 0; i < cart.length; i++)
-      temp += FRUITS[cart[i].fruitId].price * cart[i].count;
+    for (let i = 0; i < cart.length; i++) {
+      const f = FRUITS_BY_ID[cart[i].fruitId] || FRUITS[cart[i].fruitId];
+      temp += Number(f?.price || 0) * cart[i].count;
+    }
     setTotal(temp);
   }, [cart]);
 
@@ -61,7 +63,7 @@ export default function Cart() {
       </div>
       <div className="flex w-full flex-col gap-4 lg:w-2/5 lg:gap-[25px]">
         {cart.map((item, index) => {
-          const fruit = FRUITS[item.fruitId];
+          const fruit = FRUITS_BY_ID[item.fruitId] || FRUITS[item.fruitId];
           return (
             <div
               className="border-secondary flex items-center gap-3 rounded-lg border p-3 lg:gap-[25px] lg:border-none lg:p-0"
@@ -183,7 +185,7 @@ export default function Cart() {
         <h2 className="text-xl font-bold lg:text-2xl">Order Summary</h2>
         <div className="border-gray flex flex-col gap-2 border-y-[1px] py-4 font-mono text-sm font-normal text-white lg:py-6 lg:text-base">
           {cart.map((item) => {
-            const fruit = FRUITS[item.fruitId];
+            const fruit = FRUITS_BY_ID[item.fruitId] || FRUITS[item.fruitId];
             return (
               <div
                 className="flex justify-between"
@@ -192,7 +194,9 @@ export default function Cart() {
                 <span>
                   ${fruit.price} x {item.count}
                 </span>
-                <span>${(fruit.price * item.count).toFixed(1)}</span>
+                <span>
+                  ${(Number(fruit.price || 0) * item.count).toFixed(1)}
+                </span>
               </div>
             );
           })}

@@ -1,13 +1,4 @@
-import { FRUITS } from "./constants";
-
-// Create lookup maps for better performance and resilience
-export const FRUITS_BY_SLUG = Object.fromEntries(
-  FRUITS.map((fruit) => [fruit.slug, fruit]),
-);
-
-export const FRUITS_BY_ID = Object.fromEntries(
-  FRUITS.map((fruit) => [fruit.id, fruit]),
-);
+import { FRUITS_BY_SLUG, FRUITS_BY_ID } from "./constants";
 
 /**
  * Get fruit by slug
