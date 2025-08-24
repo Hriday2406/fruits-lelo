@@ -14,6 +14,7 @@ import {
 import { useContext, useEffect, useState, useCallback } from "react";
 import { CartContext, FavContext } from "./App";
 import NotFound from "./NotFound";
+import { setCart as saveCart, setFavs as saveFavs } from "../utils/storage";
 
 function Tags({ text, isVitamin }) {
   if (isVitamin)
@@ -88,10 +89,11 @@ export default function Product() {
               if (favs.includes(fruit.id)) {
                 for (let i in newArr)
                   if (favs[i] == fruit.id) newArr.splice(i, 1);
+                saveFavs(newArr);
                 return newArr;
               }
               newArr.push(fruit.id);
-              localStorage.setItem("favs", JSON.stringify(newArr));
+              saveFavs(newArr);
               return newArr;
             });
           }}
@@ -131,7 +133,7 @@ export default function Product() {
                     for (let i in newCart)
                       if (newCart[i].fruitId == fruit.id)
                         newCart[i].count = qty - 1;
-                    localStorage.setItem("cart", JSON.stringify(newCart));
+                    saveCart(newCart);
                     return newCart;
                   });
                 }
@@ -152,7 +154,7 @@ export default function Product() {
                     for (let i in newCart)
                       if (newCart[i].fruitId == fruit.id)
                         newCart[i].count = qty + 1;
-                    localStorage.setItem("cart", JSON.stringify(newCart));
+                    saveCart(newCart);
                     return newCart;
                   });
                 }
@@ -183,12 +185,12 @@ export default function Product() {
                 const newCart = [...prev];
                 if (!isInCart(cart, fruit.id)) {
                   newCart.push({ fruitId: fruit.id, count: qty });
-                  localStorage.setItem("cart", JSON.stringify(newCart));
+                  saveCart(newCart);
                   return newCart;
                 }
                 for (let i in newCart)
                   if (newCart[i].fruitId == fruit.id) newCart.splice(i, 1);
-                localStorage.setItem("cart", JSON.stringify(newCart));
+                saveCart(newCart);
                 return newCart;
               });
             }}

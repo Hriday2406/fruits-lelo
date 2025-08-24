@@ -6,6 +6,13 @@ import Home from "./Home";
 import Product from "./Product";
 import Cart from "./Cart";
 import NotFound from "./NotFound";
+import {
+  getCart as loadCart,
+  setCart as saveCart,
+  getFavs as loadFavs,
+  setFavs as saveFavs,
+  loadJSON,
+} from "../utils/storage";
 
 export const CartContext = createContext([
   {
@@ -32,13 +39,12 @@ function App() {
   ];
   let initialFavs = [0, 2, 4, 7];
 
-  if (localStorage.getItem("cart") == null)
-    localStorage.setItem("cart", JSON.stringify(initialCart));
-  if (localStorage.getItem("favs") == null)
-    localStorage.setItem("favs", JSON.stringify(initialFavs));
+  // Initialize storage with defaults if missing
+  if (loadJSON("cart", null) == null) saveCart(initialCart);
+  if (loadJSON("favs", null) == null) saveFavs(initialFavs);
 
-  const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")));
-  const [favs, setFavs] = useState(JSON.parse(localStorage.getItem("favs")));
+  const [cart, setCart] = useState(loadCart());
+  const [favs, setFavs] = useState(loadFavs());
   const [searchText, setSearchText] = useState("");
   const [showFav, setShowFav] = useState(false);
 
@@ -47,6 +53,23 @@ function App() {
     window.addEventListener("clearSearch", handler);
     return () => window.removeEventListener("clearSearch", handler);
   }, []);
+
+  // Persist cart/favs to storage when they change
+  useEffect(() => {
+    try {
+      saveCart(cart);
+    } catch {
+      // saveCart already handles failures; keep silent here
+    }
+  }, [cart]);
+
+  useEffect(() => {
+    try {
+      saveFavs(favs);
+    } catch {
+      // noop
+    }
+  }, [favs]);
 
   return (
     <CartContext.Provider value={{ cart, setCart }}>

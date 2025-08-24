@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { CartContext } from "./App";
+import { setCart as saveCart } from "../utils/storage";
 
 export default function CartCard({ onNotify }) {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function CartCard({ onNotify }) {
     setCart((prev) => {
       const newCart = [...prev];
       newCart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(newCart));
+      saveCart(newCart);
       return newCart;
     });
   }
@@ -125,7 +126,7 @@ export default function CartCard({ onNotify }) {
               );
             }
             setCart([]);
-            localStorage.setItem("cart", JSON.stringify([]));
+            saveCart([]);
           }}
         >
           <Icon path={mdiCheckAll} size={0.8} />

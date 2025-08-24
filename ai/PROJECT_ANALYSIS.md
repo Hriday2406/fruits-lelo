@@ -31,6 +31,7 @@ High priority (1-3 hours)
 - 3. Centralize localStorage access into `src/utils/storage.js`
   - Files: new `src/utils/storage.js`, update `src/components/App.jsx`, Cart/Product/cartCard to use helpers
   - Success: `localStorage` reads/writes wrapped with try/catch, tests for fallback behavior added
+  - Status: Completed — created `storage.js` with get/set helpers, updated components to use these helpers with error handling.
 
 - 4. Add FRUITS lookup maps and fix brittle slug/id lookup
   - Files: `src/utils/constants.js`, `src/components/Product.jsx`

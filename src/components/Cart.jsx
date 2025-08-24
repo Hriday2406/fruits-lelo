@@ -12,6 +12,7 @@ import { FRUITS, FRUITS_BY_ID } from "../utils/constants";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./App";
 import Popup from "./Popup";
+import { setCart as saveCart } from "../utils/storage";
 
 export default function Cart() {
   const { cart, setCart } = useContext(CartContext);
@@ -28,7 +29,7 @@ export default function Cart() {
     setCart((prev) => {
       const newCart = [...prev];
       newCart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(newCart));
+      saveCart(newCart);
       return newCart;
     });
   }
@@ -115,15 +116,12 @@ export default function Cart() {
                           for (let i in newCart)
                             if (newCart[i].fruitId == fruit.id) {
                               if (newCart[i].count == 1) {
-                                localStorage.setItem(
-                                  "cart",
-                                  JSON.stringify(newCart),
-                                );
+                                saveCart(newCart);
                                 return newCart;
                               }
                               newCart[i].count -= 1;
                             }
-                          localStorage.setItem("cart", JSON.stringify(newCart));
+                          saveCart(newCart);
                           return newCart;
                         });
                       }}
@@ -141,7 +139,7 @@ export default function Cart() {
                           for (let i in newCart)
                             if (newCart[i].fruitId == fruit.id)
                               newCart[i].count += 1;
-                          localStorage.setItem("cart", JSON.stringify(newCart));
+                          saveCart(newCart);
                           return newCart;
                         });
                       }}
@@ -238,7 +236,7 @@ export default function Cart() {
               )}`,
             });
             setCart([]);
-            localStorage.setItem("cart", JSON.stringify([]));
+            saveCart([]);
           }}
         >
           <Icon path={mdiCheckAll} size={0.8} />
