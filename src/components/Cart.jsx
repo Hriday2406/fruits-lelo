@@ -8,136 +8,183 @@ import {
   mdiCheckAll,
 } from "@mdi/js";
 import { Link, useNavigate } from "react-router-dom";
-import { FRUITS } from "../utils/constants";
+import { FRUITS, FRUITS_BY_ID } from "../utils/constants";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./App";
+import Popup from "./Popup";
+import { setCart as saveCart } from "../utils/storage";
 
 export default function Cart() {
   const { cart, setCart } = useContext(CartContext);
   const [total, setTotal] = useState(0);
   const navigate = useNavigate();
+  const [popup, setPopup] = useState({
+    visible: false,
+    type: "info",
+    title: "",
+    message: "",
+  });
 
   function handleDelete(index) {
     setCart((prev) => {
       const newCart = [...prev];
       newCart.splice(index, 1);
-      localStorage.setItem("cart", JSON.stringify(newCart));
+      saveCart(newCart);
       return newCart;
     });
   }
 
   useEffect(() => {
     let temp = 0;
-    for (let i = 0; i < cart.length; i++)
-      temp += FRUITS[cart[i].fruitId].price * cart[i].count;
+    for (let i = 0; i < cart.length; i++) {
+      const f = FRUITS_BY_ID[cart[i].fruitId] || FRUITS[cart[i].fruitId];
+      temp += Number(f?.price || 0) * cart[i].count;
+    }
     setTotal(temp);
   }, [cart]);
 
   return (
-    <div className="relative flex items-start justify-between px-14 py-32">
-      <div className="absolute left-10 top-5">
+    <div className="relative flex flex-col gap-6 px-4 py-4 pb-8 md:py-8 lg:flex-row lg:items-start lg:justify-between lg:px-14 lg:py-32">
+      <div className="mb-4 flex items-center gap-3 md:flex-col md:gap-5 lg:absolute lg:top-5 lg:left-10 lg:mb-0">
         <Icon
           path={mdiKeyboardBackspace}
           size={1.5}
-          className="cursor-pointer text-accent transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
+          className="text-accent focus-visible:outline-accent cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84] focus:outline-none focus-visible:outline-2 md:self-start"
           onClick={() => {
             navigate(-1);
           }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") navigate(-1);
+          }}
+          aria-label="Go back"
         />
-        <h1 className="pl-4 pt-3 text-2xl font-bold">Shopping Cart</h1>
+        <h1 className="text-xl font-bold sm:text-2xl">Shopping Cart</h1>
       </div>
-      <div className="flex w-2/5 flex-col gap-[25px]">
+      <div className="flex w-full flex-col gap-4 lg:w-2/5 lg:gap-[25px]">
         {cart.map((item, index) => {
-          const fruit = FRUITS[item.fruitId];
+          const fruit = FRUITS_BY_ID[item.fruitId] || FRUITS[item.fruitId];
           return (
-            <div className="flex items-center gap-[25px]" key={fruit.id}>
+            <div
+              className="border-secondary flex items-center gap-3 rounded-lg border p-3 lg:gap-[25px] lg:border-none lg:p-0"
+              key={fruit.id}
+            >
               <Link
                 to={`/store/${fruit.slug}`}
                 className="group shrink-0 select-none"
               >
-                <div className="shrink-0 rounded-2xl border-2 border-dashed border-dash p-[40px]">
+                <div className="border-dash shrink-0 rounded-2xl border-2 border-dashed p-6 lg:p-[40px]">
                   <img
                     src={fruit.src}
                     alt={fruit.name}
-                    className="size-[40px] transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_15px_#AE9B84]"
+                    loading="lazy"
+                    className="size-8 transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_15px_#AE9B84] lg:size-[40px]"
                   />
                 </div>
               </Link>
-              <div className="flex w-full items-center justify-between">
-                <div className="justify flex flex-col gap-2">
-                  <h3 className="font-bold">{fruit.name}</h3>
-                  <span className="text-gray">{fruit.family} family</span>
-                  <div className="flex gap-1 text-accent">
-                    <Icon path={mdiCubeOutline} size={0.8} />
-                    <h4 className="font-mono text-sm font-bold">In Stock</h4>
+              <div className="flex w-full flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+                <div className="flex flex-col gap-1 lg:gap-2">
+                  <h3 className="text-sm font-bold lg:text-base">
+                    {fruit.name}
+                  </h3>
+                  <span className="text-gray text-xs lg:text-sm">
+                    {fruit.family} family
+                  </span>
+                  <div className="text-accent flex gap-1">
+                    <Icon
+                      path={mdiCubeOutline}
+                      size={0.6}
+                      className="lg:hidden"
+                    />
+                    <Icon
+                      path={mdiCubeOutline}
+                      size={0.8}
+                      className="hidden lg:block"
+                    />
+                    <h4 className="font-mono text-xs font-bold lg:text-sm">
+                      In Stock
+                    </h4>
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125"
-                    onClick={() => {
-                      setCart((prev) => {
-                        const newCart = [...prev];
-                        for (let i in newCart)
-                          if (newCart[i].fruitId == fruit.id) {
-                            if (newCart[i].count == 1) {
-                              localStorage.setItem(
-                                "cart",
-                                JSON.stringify(newCart),
-                              );
-                              return newCart;
+                <div className="flex items-center justify-between lg:flex-col lg:gap-2">
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="bg-secondary focus-visible:outline-accent flex h-6 w-6 cursor-pointer items-center justify-center rounded-md p-[5px] transition-all hover:scale-125 focus:outline-none focus-visible:outline-2 lg:h-5 lg:w-5"
+                      onClick={() => {
+                        setCart((prev) => {
+                          const newCart = [...prev];
+                          for (let i in newCart)
+                            if (newCart[i].fruitId == fruit.id) {
+                              if (newCart[i].count == 1) {
+                                saveCart(newCart);
+                                return newCart;
+                              }
+                              newCart[i].count -= 1;
                             }
-                            newCart[i].count -= 1;
-                          }
-                        localStorage.setItem("cart", JSON.stringify(newCart));
-                        return newCart;
-                      });
-                    }}
-                  >
-                    <Icon path={mdiMinus} size={0.45} />
-                  </button>
-                  <span>{item.count}</span>
-                  <button
-                    className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125"
-                    onClick={() => {
-                      setCart((prev) => {
-                        const newCart = [...prev];
-                        for (let i in newCart)
-                          if (newCart[i].fruitId == fruit.id)
-                            newCart[i].count += 1;
-                        localStorage.setItem("cart", JSON.stringify(newCart));
-                        return newCart;
-                      });
-                    }}
-                  >
-                    <Icon path={mdiPlus} size={0.45} />
-                  </button>
+                          saveCart(newCart);
+                          return newCart;
+                        });
+                      }}
+                    >
+                      <Icon path={mdiMinus} size={0.45} />
+                    </button>
+                    <span className="flex h-6 w-6 items-center justify-center text-sm font-bold lg:text-base">
+                      {item.count}
+                    </span>
+                    <button
+                      className="bg-secondary focus-visible:outline-accent flex h-6 w-6 cursor-pointer items-center justify-center rounded-md p-[5px] transition-all hover:scale-125 focus:outline-none focus-visible:outline-2 lg:h-5 lg:w-5"
+                      onClick={() => {
+                        setCart((prev) => {
+                          const newCart = [...prev];
+                          for (let i in newCart)
+                            if (newCart[i].fruitId == fruit.id)
+                              newCart[i].count += 1;
+                          saveCart(newCart);
+                          return newCart;
+                        });
+                      }}
+                    >
+                      <Icon path={mdiPlus} size={0.45} />
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon
+                      path={mdiTrashCan}
+                      size={0.9}
+                      color="red"
+                      className="bg-secondary focus-visible:outline-accent cursor-pointer rounded-md p-1 transition-all hover:scale-125 focus:outline-none focus-visible:outline-2 lg:size-[1.1]"
+                      onClick={() => {
+                        handleDelete(index);
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ")
+                          handleDelete(index);
+                      }}
+                      aria-label="Remove item"
+                    />
+                    <span className="font-mono text-sm font-bold lg:text-base">
+                      ${fruit.price}
+                    </span>
+                  </div>
                 </div>
-                <Icon
-                  path={mdiTrashCan}
-                  size={1.1}
-                  color="red"
-                  className="cursor-pointer rounded-md bg-secondary p-1 transition-all hover:scale-125"
-                  onClick={() => {
-                    handleDelete(index);
-                  }}
-                />
-                <span className="font-mono font-bold">${fruit.price}</span>
               </div>
             </div>
           );
         })}
         {cart.length == 0 && (
-          <p className="w-fit rounded-2xl border-2 border-dashed border-dash p-10 font-mono text-xl text-accent">
+          <p className="border-dash text-accent w-fit rounded-2xl border-2 border-dashed p-6 text-center font-mono text-lg lg:p-10 lg:text-xl">
             CART IS EMPTY.
           </p>
         )}
       </div>
-      <div className="flex flex-col gap-[25px] rounded-2xl border-2 border-dashed border-dash p-9 text-white transition-all duration-500 hover:shadow-[0_0_15px_#AE9B84]">
-        <h2 className="text-2xl font-bold">Order Summary</h2>
-        <div className="flex flex-col gap-2 border-y-[1px] border-gray py-6 font-mono font-normal text-white">
+      <div className="border-dash flex w-full flex-col gap-4 rounded-2xl border-2 border-dashed p-6 text-white transition-all duration-500 hover:shadow-[0_0_15px_#AE9B84] lg:w-auto lg:gap-[25px] lg:p-9">
+        <h2 className="text-xl font-bold lg:text-2xl">Order Summary</h2>
+        <div className="border-gray flex flex-col gap-2 border-y-[1px] py-4 font-mono text-sm font-normal text-white lg:py-6 lg:text-base">
           {cart.map((item) => {
-            const fruit = FRUITS[item.fruitId];
+            const fruit = FRUITS_BY_ID[item.fruitId] || FRUITS[item.fruitId];
             return (
               <div
                 className="flex justify-between"
@@ -146,45 +193,63 @@ export default function Cart() {
                 <span>
                   ${fruit.price} x {item.count}
                 </span>
-                <span>${(fruit.price * item.count).toFixed(1)}</span>
+                <span>
+                  ${(Number(fruit.price || 0) * item.count).toFixed(1)}
+                </span>
               </div>
             );
           })}
           {cart.length == 0 && (
-            <p className="text-center font-mono text-lg text-accent">
+            <p className="text-accent text-center font-mono text-base lg:text-lg">
               CART IS EMPTY.
             </p>
           )}
         </div>
-        <div className="flex justify-between text-2xl font-bold">
+        <div className="flex justify-between text-lg font-bold lg:text-2xl">
           <div className="flex items-center gap-2">
             <span>Total</span>
-            <span className="text-base font-normal text-gray">
+            <span className="text-gray text-sm font-normal lg:text-base">
               ({cart.length} Items)
             </span>
           </div>
           <span className="font-mono">${total.toFixed(1)}</span>
         </div>
         <button
-          className="flex w-[300px] items-center justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]"
+          className="bg-accent hover:bg-secondary hover:text-accent flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84] lg:w-[300px] lg:px-24 lg:py-4"
           onClick={() => {
             if (cart.length == 0) {
-              alert(
-                "You cannot checkout with an empty cart, put some fruits in the cart first.",
-              );
+              setPopup({
+                visible: true,
+                type: "error",
+                title: "Cart khaali hai",
+                message:
+                  "Kuch phalon ko cart mein daalo, tabhi checkout kar paoge.",
+              });
               return;
             }
 
-            alert(
-              "Yay! You have bought the fruits! It will be delivered to you.",
-            );
+            setPopup({
+              visible: true,
+              type: "success",
+              title: "Order pakka hua",
+              message: `Yay! Aapke phal order ho gaye hain — jaldi hi deliver ho jayenge! Total: $${total.toFixed(
+                1,
+              )}`,
+            });
             setCart([]);
-            localStorage.setItem("cart", JSON.stringify([]));
+            saveCart([]);
           }}
         >
           <Icon path={mdiCheckAll} size={0.8} />
           Checkout
         </button>
+        <Popup
+          visible={popup.visible}
+          type={popup.type}
+          title={popup.title}
+          message={popup.message}
+          onClose={() => setPopup((p) => ({ ...p, visible: false }))}
+        />
       </div>
     </div>
   );

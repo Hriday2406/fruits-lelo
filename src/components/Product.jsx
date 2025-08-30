@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router";
-import { FRUITS } from "../utils/constants";
+import { getFruitBySlug, isInCart } from "../utils/fruitUtils";
 import Icon from "@mdi/react";
 import {
   mdiCubeOutline,
@@ -11,18 +11,21 @@ import {
   mdiHeartOutline,
   mdiHeart,
 } from "@mdi/js";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import { CartContext, FavContext } from "./App";
+import NotFound from "./NotFound";
+import Popup from "./Popup";
+import { setCart as saveCart, setFavs as saveFavs } from "../utils/storage";
 
 function Tags({ text, isVitamin }) {
   if (isVitamin)
     return (
-      <span className="rounded-full bg-accent px-3 font-mono text-xs font-black leading-6 text-black transition-all hover:scale-110">
+      <span className="bg-accent rounded-full px-3 font-mono text-xs leading-6 font-black text-black transition-all hover:scale-110">
         Vitamin {text}
       </span>
     );
   return (
-    <span className="rounded-full bg-accent px-3 font-mono text-xs font-black leading-6 text-black transition-all hover:scale-110">
+    <span className="bg-accent rounded-full px-3 font-mono text-xs leading-6 font-black text-black transition-all hover:scale-110">
       {text}
     </span>
   );
@@ -30,53 +33,62 @@ function Tags({ text, isVitamin }) {
 
 export default function Product() {
   let { slug } = useParams();
-  let fruit = FRUITS[getIndex(slug)];
   const navigate = useNavigate();
   const { cart, setCart } = useContext(CartContext);
   const { favs, setFavs } = useContext(FavContext);
   const [qty, setQty] = useState(1);
   const [fav, setFav] = useState(false);
+  const [popup, setPopup] = useState({
+    visible: false,
+    type: "info",
+    title: "",
+    message: "",
+  });
 
-  function getIndex(slug) {
-    for (let i = 0; i < 25; i++)
-      if (FRUITS[i].slug == slug) return FRUITS[i].id;
-  }
+  const getQty = useCallback(
+    (id) => {
+      for (let i in cart) if (cart[i].fruitId == id) return cart[i].count;
+      return 1;
+    },
+    [cart],
+  );
 
-  function isInCart(id) {
-    for (let i in cart) if (cart[i].fruitId == id) return true;
-    return false;
-  }
-
-  function getQty(id) {
-    for (let i in cart) if (cart[i].fruitId == id) return cart[i].count;
-    return 1;
-  }
+  let fruit = getFruitBySlug(slug);
 
   useEffect(() => {
-    if (isInCart(fruit.id)) setQty(getQty);
-    if (favs.includes(fruit.id)) setFav(true);
-  }, []);
+    if (fruit && isInCart(cart, fruit.id)) setQty(getQty(fruit.id));
+    if (fruit && favs.includes(fruit.id)) setFav(true);
+  }, [fruit, favs, cart, getQty]);
+
+  // If fruit not found, show NotFound component
+  if (!fruit) {
+    return <NotFound />;
+  }
 
   return (
-    <div className="relative flex items-start gap-10 p-20">
+    <div className="relative flex flex-col items-start gap-6 p-4 pt-16 sm:p-8 sm:pt-20 lg:flex-row lg:gap-10 lg:p-20 lg:pt-24">
       <Icon
         path={mdiKeyboardBackspace}
         size={1.5}
-        className="absolute left-10 top-5 cursor-pointer text-accent transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84]"
+        className="text-accent focus-visible:outline-accent absolute top-4 left-4 z-10 cursor-pointer transition-all hover:scale-125 hover:drop-shadow-[0_0_10px_#AE9B84] focus:outline-none focus-visible:outline-2 sm:top-8 sm:left-8 lg:top-10 lg:left-10"
         onClick={() => {
           navigate(-1);
         }}
+        aria-label="Go back"
+        role="button"
+        tabIndex={0}
       />
-      <div className="group relative shrink-0 select-none rounded-2xl border-2 border-dashed border-dash p-[180px]">
+      <div className="group border-dash relative w-full shrink-0 rounded-2xl border-2 border-dashed p-10 select-none sm:p-20 lg:w-auto lg:p-[180px]">
         <img
           src={fruit.src}
           alt={fruit.name}
-          className="size-[100px] transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84]"
+          loading="lazy"
+          className="mx-auto size-24 transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84] lg:size-[100px]"
         />
         <Icon
           path={fav ? mdiHeart : mdiHeartOutline}
           size={1}
-          className="absolute right-10 top-10 cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red]"
+          className="focus-visible:outline-accent absolute top-4 right-4 cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red] focus:outline-none focus-visible:outline-2 sm:top-6 sm:right-6 lg:top-10 lg:right-10"
           color={fav ? "red" : "white"}
           onClick={() => {
             setFav(!fav);
@@ -85,15 +97,19 @@ export default function Product() {
               if (favs.includes(fruit.id)) {
                 for (let i in newArr)
                   if (favs[i] == fruit.id) newArr.splice(i, 1);
+                saveFavs(newArr);
                 return newArr;
               }
               newArr.push(fruit.id);
-              localStorage.setItem("favs", JSON.stringify(newArr));
+              saveFavs(newArr);
               return newArr;
             });
           }}
+          role="button"
+          tabIndex={0}
+          aria-label={fav ? "Remove favorite" : "Add favorite"}
         />
-        <div className="absolute -bottom-10 left-0 flex items-center gap-2">
+        <div className="absolute -bottom-8 left-0 flex flex-wrap items-center gap-2 sm:-bottom-10">
           {fruit.colors.map((color) => (
             <Tags text={color} isVitamin={false} key={color + fruit.id} />
           ))}
@@ -102,28 +118,30 @@ export default function Product() {
           ))}
         </div>
       </div>
-      <div className="flex w-full flex-col justify-between gap-7">
+      <div className="flex w-full flex-col justify-between gap-6 pt-8 lg:gap-7 lg:pt-0">
         <div className="flex flex-col gap-2">
-          <h1 className="text-4xl font-bold">{fruit.name}</h1>
-          <h5 className="text-sm text-gray">{fruit.family} family</h5>
-          <div className="flex gap-1 text-accent">
+          <h1 className="text-2xl font-bold sm:text-3xl lg:text-4xl">
+            {fruit.name}
+          </h1>
+          <h5 className="text-gray text-sm">{fruit.family} family</h5>
+          <div className="text-accent flex gap-1">
             <Icon path={mdiCubeOutline} size={0.8} />
             <h4 className="font-mono text-sm font-bold">In Stock</h4>
           </div>
           <h5 className="font-mono text-sm font-bold">${fruit.price}</h5>
           <div className="flex gap-2">
             <button
-              className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125"
+              className="bg-secondary focus-visible:outline-accent size-8 cursor-pointer rounded-md p-[5px] transition-all hover:scale-125 focus:outline-none focus-visible:outline-2 sm:size-10 lg:size-5"
               onClick={() => {
                 if (qty == 1) return;
                 setQty(qty - 1);
-                if (isInCart(fruit.id)) {
+                if (isInCart(cart, fruit.id)) {
                   setCart((prev) => {
                     const newCart = [...prev];
                     for (let i in newCart)
                       if (newCart[i].fruitId == fruit.id)
                         newCart[i].count = qty - 1;
-                    localStorage.setItem("cart", JSON.stringify(newCart));
+                    saveCart(newCart);
                     return newCart;
                   });
                 }
@@ -131,18 +149,20 @@ export default function Product() {
             >
               <Icon path={mdiMinus} size={0.45} />
             </button>
-            <span>{qty}</span>
+            <span className="flex min-w-8 items-center justify-center text-lg font-bold">
+              {qty}
+            </span>
             <button
-              className="size-5 rounded-md bg-secondary p-[5px] transition-all hover:scale-125"
+              className="bg-secondary focus-visible:outline-accent size-8 cursor-pointer rounded-md p-[5px] transition-all hover:scale-125 focus:outline-none focus-visible:outline-2 sm:size-10 lg:size-5"
               onClick={() => {
                 setQty(qty + 1);
-                if (isInCart(fruit.id)) {
+                if (isInCart(cart, fruit.id)) {
                   setCart((prev) => {
                     const newCart = [...prev];
                     for (let i in newCart)
                       if (newCart[i].fruitId == fruit.id)
                         newCart[i].count = qty + 1;
-                    localStorage.setItem("cart", JSON.stringify(newCart));
+                    saveCart(newCart);
                     return newCart;
                   });
                 }
@@ -152,39 +172,75 @@ export default function Product() {
             </button>
           </div>
         </div>
-        <div className="w-3/5 text-justify">{fruit.desc}</div>
-        <div className="flex w-[400px] flex-col gap-3">
+        <div className="text-justify text-sm sm:text-base lg:w-3/5">
+          {fruit.desc}
+        </div>
+        <div className="flex w-full flex-col gap-3 lg:w-[400px]">
           <button
-            className="flex justify-center gap-3 rounded-xl bg-accent px-24 py-4 font-mono font-bold text-black transition-all duration-500 hover:bg-secondary hover:text-accent hover:shadow-[0_0_10px_#AE9B84]"
+            className="bg-accent hover:bg-secondary hover:text-accent focus-visible:outline-accent flex w-full cursor-pointer justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84] focus:outline-none focus-visible:outline-2 sm:px-12 sm:py-4 lg:px-24"
             onClick={() => {
-              navigate("/cart");
+              const isAlreadyInCart = isInCart(cart, fruit.id);
+              
+              // Add the product to cart first if not already in cart
+              if (!isAlreadyInCart) {
+                setCart((prev) => {
+                  const newCart = [...prev];
+                  newCart.push({ fruitId: fruit.id, count: qty });
+                  saveCart(newCart);
+                  return newCart;
+                });
+              }
+              
+              // Show appropriate popup message
+              setPopup({
+                visible: true,
+                type: "success",
+                title: isAlreadyInCart ? "Ready to Checkout!" : "Added to Cart!",
+                message: isAlreadyInCart 
+                  ? `${fruit.name} is in your cart. Taking you to checkout...`
+                  : `${fruit.name} (${qty}) added to cart. Taking you to checkout...`,
+              });
+              
+              // Navigate to cart after a short delay for better UX
+              setTimeout(() => {
+                navigate("/cart");
+              }, 2500);
             }}
+            aria-label="Buy now"
           >
             <Icon path={mdiCursorDefault} size={1} />
             Buy Now
           </button>
           <button
-            className="flex justify-center gap-3 rounded-xl bg-secondary px-24 py-4 font-mono font-bold text-accent transition-all duration-500 hover:bg-accent hover:text-black hover:shadow-[0_0_10px] hover:shadow-accent"
+            className="bg-secondary text-accent hover:bg-accent hover:shadow-accent focus-visible:outline-accent flex w-full cursor-pointer justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold transition-all duration-500 hover:text-black hover:shadow-[0_0_10px] focus:outline-none focus-visible:outline-2 sm:px-12 sm:py-4 lg:px-24"
             onClick={() => {
               setCart((prev) => {
                 const newCart = [...prev];
-                if (!isInCart(fruit.id)) {
+                if (!isInCart(cart, fruit.id)) {
                   newCart.push({ fruitId: fruit.id, count: qty });
-                  localStorage.setItem("cart", JSON.stringify(newCart));
+                  saveCart(newCart);
                   return newCart;
                 }
                 for (let i in newCart)
                   if (newCart[i].fruitId == fruit.id) newCart.splice(i, 1);
-                localStorage.setItem("cart", JSON.stringify(newCart));
+                saveCart(newCart);
                 return newCart;
               });
             }}
           >
             <Icon path={mdiCart} size={1} />
-            {isInCart(fruit.id) ? "Remove From Cart" : "Add To Cart"}
+            {isInCart(cart, fruit.id) ? "Remove From Cart" : "Add To Cart"}
           </button>
         </div>
       </div>
+      <Popup
+        visible={popup.visible}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onClose={() => setPopup((p) => ({ ...p, visible: false }))}
+        successColor="golden" // Use golden accent color for success
+      />
     </div>
   );
 }
