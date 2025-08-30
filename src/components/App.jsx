@@ -6,6 +6,7 @@ import Home from "./Home";
 import Product from "./Product";
 import Cart from "./Cart";
 import NotFound from "./NotFound";
+import ErrorBoundary from "./ErrorBoundary";
 import {
   getCart as loadCart,
   setCart as saveCart,
@@ -72,34 +73,36 @@ function App() {
   }, [favs]);
 
   return (
-    <CartContext.Provider value={{ cart, setCart }}>
-      <FavContext.Provider value={{ favs, setFavs }}>
-        <div className="bg-bg font-body scrollbar-thin scrollbar-webkit min-h-screen w-full pt-20 text-white md:pt-24">
-          <Header
-            setSearchText={setSearchText}
-            showFav={showFav}
-            setShowFav={setShowFav}
-          />
-
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/store"
-              element={
-                <Store
-                  searchText={searchText}
-                  setSearchText={setSearchText}
-                  showFav={showFav}
-                />
-              }
+    <ErrorBoundary fallbackMessage="The Fruits Lelo app encountered an error. Please refresh the page to continue shopping.">
+      <CartContext.Provider value={{ cart, setCart }}>
+        <FavContext.Provider value={{ favs, setFavs }}>
+          <div className="bg-bg font-body scrollbar-thin scrollbar-webkit min-h-screen w-full pt-20 text-white md:pt-24">
+            <Header
+              setSearchText={setSearchText}
+              showFav={showFav}
+              setShowFav={setShowFav}
             />
-            <Route path="/store/:slug" element={<Product />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-      </FavContext.Provider>
-    </CartContext.Provider>
+
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route
+                path="/store"
+                element={
+                  <Store
+                    searchText={searchText}
+                    setSearchText={setSearchText}
+                    showFav={showFav}
+                  />
+                }
+              />
+              <Route path="/store/:slug" element={<Product />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+        </FavContext.Provider>
+      </CartContext.Provider>
+    </ErrorBoundary>
   );
 }
 

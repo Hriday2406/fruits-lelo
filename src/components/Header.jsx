@@ -8,7 +8,7 @@ import {
   mdiMenu,
   mdiClose,
 } from "@mdi/js";
-import { useContext, useRef, useState, useEffect } from "react";
+import { useContext, useRef, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { Link, useLocation } from "react-router-dom";
 import { Badge, ConfigProvider, Popover } from "antd";
@@ -29,6 +29,18 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
     title: "",
     message: "",
   });
+
+  // Debounced search function to improve performance
+  const debouncedSetSearchText = useCallback(
+    (() => {
+      let timeoutId;
+      return (value) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => setSearchText(value), 300);
+      };
+    })(),
+    [setSearchText],
+  );
 
   useEffect(() => {
     const handler = () => {
@@ -190,7 +202,7 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
                     ref={searchRef}
                     placeholder="Search fruits..."
                     onChange={(e) => {
-                      setSearchText(e.target.value);
+                      debouncedSetSearchText(e.target.value);
                     }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
@@ -326,7 +338,7 @@ export default function Header({ setSearchText, showFav, setShowFav }) {
               ref={searchRef}
               placeholder="Search"
               onChange={(e) => {
-                setSearchText(e.target.value);
+                debouncedSetSearchText(e.target.value);
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {

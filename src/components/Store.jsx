@@ -474,13 +474,8 @@ export default function Store({ searchText, showFav }) {
                   stagger
                 >
                   <div className="group border-dash relative shrink-0 rounded-2xl border-2 border-dashed select-none">
-                    <Icon
-                      path={
-                        favs.includes(fruit.id) ? mdiHeart : mdiHeartOutline
-                      }
-                      size={1}
-                      className="absolute top-10 right-10 cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red]"
-                      color={favs.includes(fruit.id) ? "red" : "white"}
+                    <button
+                      className="focus-visible:outline-accent absolute top-10 right-10 cursor-pointer rounded-md p-1 transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_red] focus:outline-none focus-visible:outline-2"
                       onClick={() => {
                         setFavs((prev) => {
                           const newArr = [...prev];
@@ -493,7 +488,38 @@ export default function Store({ searchText, showFav }) {
                           return newArr;
                         });
                       }}
-                    />
+                      aria-label={
+                        favs.includes(fruit.id)
+                          ? `Remove ${fruit.name} from favorites`
+                          : `Add ${fruit.name} to favorites`
+                      }
+                      aria-pressed={favs.includes(fruit.id)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setFavs((prev) => {
+                            const newArr = [...prev];
+                            if (favs.includes(fruit.id)) {
+                              newArr.splice(favs.indexOf(fruit.id), 1);
+                            } else {
+                              newArr.push(fruit.id);
+                            }
+                            saveFavs(newArr);
+                            return newArr;
+                          });
+                        }
+                      }}
+                    >
+                      <Icon
+                        path={
+                          favs.includes(fruit.id) ? mdiHeart : mdiHeartOutline
+                        }
+                        size={1}
+                        color={favs.includes(fruit.id) ? "red" : "white"}
+                      />
+                    </button>
                     <Link
                       to={`/store/${fruit.slug}`}
                       className="rounded-2xl"
@@ -520,13 +546,8 @@ export default function Store({ searchText, showFav }) {
                           ${fruit.price}
                         </span>
                       </div>
-                      <Icon
-                        path={
-                          isInCart(cart, fruit.id) ? mdiCart : mdiCartOutline
-                        }
-                        size={1}
-                        className="cursor-pointer transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_#ae9b84]"
-                        color="#ae9b84"
+                      <button
+                        className="focus-visible:outline-accent cursor-pointer rounded-md p-1 transition-all duration-500 hover:scale-125 hover:drop-shadow-[0_0_15px_#ae9b84] focus:outline-none focus-visible:outline-2"
                         onClick={() => {
                           setCart((prev) => {
                             const newCart = [...prev];
@@ -542,7 +563,41 @@ export default function Store({ searchText, showFav }) {
                             return newCart;
                           });
                         }}
-                      />
+                        aria-label={
+                          isInCart(cart, fruit.id)
+                            ? `Remove ${fruit.name} from cart`
+                            : `Add ${fruit.name} to cart`
+                        }
+                        aria-pressed={isInCart(cart, fruit.id)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setCart((prev) => {
+                              const newCart = [...prev];
+                              if (!isInCart(cart, fruit.id)) {
+                                newCart.push({ fruitId: fruit.id, count: 1 });
+                                saveCart(newCart);
+                                return newCart;
+                              }
+                              for (let i in newCart)
+                                if (newCart[i].fruitId == fruit.id)
+                                  newCart.splice(i, 1);
+                              saveCart(newCart);
+                              return newCart;
+                            });
+                          }
+                        }}
+                      >
+                        <Icon
+                          path={
+                            isInCart(cart, fruit.id) ? mdiCart : mdiCartOutline
+                          }
+                          size={1}
+                          color="#ae9b84"
+                        />
+                      </button>
                     </div>
                   </div>
                 </Flipped>
