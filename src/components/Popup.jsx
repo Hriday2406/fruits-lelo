@@ -6,6 +6,7 @@ export default function Popup({
   title,
   message,
   onClose,
+  successColor = null, // Optional color override for success type
 }) {
   const [entered, setEntered] = useState(false);
   const enterTimerRef = useRef(null);
@@ -55,13 +56,6 @@ export default function Popup({
 
   if (!visible && !entered) return null;
 
-  const bg =
-    type === "success"
-      ? "bg-green-600"
-      : type === "error"
-        ? "bg-red-600"
-        : "bg-gray-800";
-
   function handleMouseEnter() {
     // pause the auto-dismiss
     if (autoTimerRef.current) {
@@ -108,7 +102,13 @@ export default function Popup({
     >
       <div className="flex items-center gap-4">
         <div
-          className={`flex h-10 w-10 items-center justify-center rounded-full sm:h-8 sm:w-8 ${type === "success" ? "bg-accent" : type === "error" ? "bg-red-600" : "bg-secondary"}`}
+          className={`flex h-10 w-10 items-center justify-center rounded-full sm:h-8 sm:w-8 ${
+            type === "success" 
+              ? successColor ? "bg-accent" : "bg-green-600"
+              : type === "error" 
+                ? "bg-red-600" 
+                : "bg-secondary"
+          }`}
           aria-hidden
         >
           {/* indicator dot */}
@@ -119,7 +119,15 @@ export default function Popup({
         </div>
         <button
           aria-label="Close popup"
-          className={`ml-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-black/30 font-mono text-lg font-bold shadow-[0_0_20px_rgba(0,0,0,0.45)] transition-transform duration-150 hover:scale-110 ${type === "success" ? "text-accent drop-shadow-[0_0_12px_rgba(174,155,132,0.9)]" : type === "error" ? "text-red-400 drop-shadow-[0_0_12px_rgba(239,68,68,0.85)]" : "text-white"}`}
+          className={`ml-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-black/30 font-mono text-lg font-bold shadow-[0_0_20px_rgba(0,0,0,0.45)] transition-transform duration-150 hover:scale-110 ${
+            type === "success" 
+              ? successColor 
+                ? "text-accent drop-shadow-[0_0_12px_rgba(174,155,132,0.9)]"
+                : "text-green-400 drop-shadow-[0_0_12px_rgba(16,185,129,0.9)]"
+              : type === "error" 
+                ? "text-red-400 drop-shadow-[0_0_12px_rgba(239,68,68,0.85)]"
+                : "text-white"
+          }`}
           onClick={() => {
             clearAllTimers();
             setEntered(false);

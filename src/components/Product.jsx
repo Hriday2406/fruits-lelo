@@ -238,6 +238,7 @@ export default function Product() {
         title={popup.title}
         message={popup.message}
         onClose={() => setPopup((p) => ({ ...p, visible: false }))}
+        successColor="golden" // Use golden accent color for success
       />
     </div>
   );
