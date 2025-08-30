@@ -2,7 +2,7 @@
 
 @theme {
   --font-body: "Roboto", sans-serif;
-  --font-mono: "Roboto Mono", serif;
+  --font-mono: "Roboto Mono", monospace;
   
   --color-bg: #0f0f0f;
   --color-secondary: #1f1f1f;
