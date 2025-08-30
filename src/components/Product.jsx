@@ -14,6 +14,7 @@ import {
 import { useContext, useEffect, useState, useCallback } from "react";
 import { CartContext, FavContext } from "./App";
 import NotFound from "./NotFound";
+import Popup from "./Popup";
 import { setCart as saveCart, setFavs as saveFavs } from "../utils/storage";
 
 function Tags({ text, isVitamin }) {
@@ -37,6 +38,12 @@ export default function Product() {
   const { favs, setFavs } = useContext(FavContext);
   const [qty, setQty] = useState(1);
   const [fav, setFav] = useState(false);
+  const [popup, setPopup] = useState({
+    visible: false,
+    type: "info",
+    title: "",
+    message: "",
+  });
 
   const getQty = useCallback(
     (id) => {
@@ -171,7 +178,32 @@ export default function Product() {
           <button
             className="bg-accent hover:bg-secondary hover:text-accent focus-visible:outline-accent flex w-full cursor-pointer justify-center gap-3 rounded-xl px-6 py-3 font-mono font-bold text-black transition-all duration-500 hover:shadow-[0_0_10px_#AE9B84] focus:outline-none focus-visible:outline-2 sm:px-12 sm:py-4 lg:px-24"
             onClick={() => {
-              navigate("/cart");
+              const isAlreadyInCart = isInCart(cart, fruit.id);
+              
+              // Add the product to cart first if not already in cart
+              if (!isAlreadyInCart) {
+                setCart((prev) => {
+                  const newCart = [...prev];
+                  newCart.push({ fruitId: fruit.id, count: qty });
+                  saveCart(newCart);
+                  return newCart;
+                });
+              }
+              
+              // Show appropriate popup message
+              setPopup({
+                visible: true,
+                type: "success",
+                title: isAlreadyInCart ? "Ready to Checkout!" : "Added to Cart!",
+                message: isAlreadyInCart 
+                  ? `${fruit.name} is in your cart. Taking you to checkout...`
+                  : `${fruit.name} (${qty}) added to cart. Taking you to checkout...`,
+              });
+              
+              // Navigate to cart after a short delay for better UX
+              setTimeout(() => {
+                navigate("/cart");
+              }, 1500);
             }}
             aria-label="Buy now"
           >
@@ -200,6 +232,13 @@ export default function Product() {
           </button>
         </div>
       </div>
+      <Popup
+        visible={popup.visible}
+        type={popup.type}
+        title={popup.title}
+        message={popup.message}
+        onClose={() => setPopup((p) => ({ ...p, visible: false }))}
+      />
     </div>
   );
 }
