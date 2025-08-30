@@ -73,6 +73,7 @@ export default function Home() {
                   <img
                     src={fruit.src}
                     alt={fruit.name}
+                    loading="lazy"
                     className="mx-auto size-14 shrink-0 object-contain transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84] md:size-20"
                   />
                   <span className="absolute bottom-2 left-2 text-xs font-bold sm:bottom-3 sm:left-3 sm:text-sm lg:bottom-4 lg:left-4 lg:text-base">

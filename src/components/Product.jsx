@@ -75,6 +75,7 @@ export default function Product() {
         <img
           src={fruit.src}
           alt={fruit.name}
+          loading="lazy"
           className="mx-auto size-24 transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84] lg:size-[100px]"
         />
         <Icon

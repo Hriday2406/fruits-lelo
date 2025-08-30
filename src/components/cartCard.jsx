@@ -42,7 +42,12 @@ export default function CartCard({ onNotify }) {
           return (
             <div className="flex items-center gap-[25px]" key={fruit.id}>
               <div className="border-dash shrink-0 rounded-2xl border-2 border-dashed p-[25px]">
-                <img src={fruit.src} alt={fruit.name} className="size-[25px]" />
+                <img
+                  src={fruit.src}
+                  alt={fruit.name}
+                  loading="lazy"
+                  className="size-[25px]"
+                />
               </div>
               <div className="flex w-full items-center justify-between">
                 <div className="flex w-2/5 items-center justify-between">

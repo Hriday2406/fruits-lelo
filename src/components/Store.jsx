@@ -22,6 +22,7 @@ import { CartContext, FavContext } from "./App";
 import { Link } from "react-router-dom";
 import { Flipped, Flipper, spring } from "react-flip-toolkit";
 import { isInCart } from "../utils/fruitUtils";
+import { setCart as saveCart, setFavs as saveFavs } from "../utils/storage";
 
 function Tags({ text, onRemove }) {
   if (text == "") return null;
@@ -488,7 +489,7 @@ export default function Store({ searchText, showFav }) {
                           } else {
                             newArr.push(fruit.id);
                           }
-                          localStorage.setItem("favs", JSON.stringify(newArr));
+                          saveFavs(newArr);
                           return newArr;
                         });
                       }}
@@ -503,6 +504,7 @@ export default function Store({ searchText, showFav }) {
                           <img
                             src={fruit.src}
                             alt={fruit.name}
+                            loading="lazy"
                             className="size-full transition-all duration-500 group-hover:scale-125 group-hover:drop-shadow-[0_0_20px_#AE9B84]"
                           />
                         </div>
@@ -530,19 +532,13 @@ export default function Store({ searchText, showFav }) {
                             const newCart = [...prev];
                             if (!isInCart(cart, fruit.id)) {
                               newCart.push({ fruitId: fruit.id, count: 1 });
-                              localStorage.setItem(
-                                "cart",
-                                JSON.stringify(newCart),
-                              );
+                              saveCart(newCart);
                               return newCart;
                             }
                             for (let i in newCart)
                               if (newCart[i].fruitId == fruit.id)
                                 newCart.splice(i, 1);
-                            localStorage.setItem(
-                              "cart",
-                              JSON.stringify(newCart),
-                            );
+                            saveCart(newCart);
                             return newCart;
                           });
                         }}
