@@ -203,7 +203,7 @@ export default function Product() {
               // Navigate to cart after a short delay for better UX
               setTimeout(() => {
                 navigate("/cart");
-              }, 1500);
+              }, 2500);
             }}
             aria-label="Buy now"
           >
